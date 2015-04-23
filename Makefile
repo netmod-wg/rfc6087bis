@@ -1,105 +1,63 @@
-xml2rfc ?= xml2rfc
-kramdown-rfc2629 ?= kramdown-rfc2629
-idnits ?= idnits
+DOC_DRAFTBASE = draft-ietf-netmod-rfc6087bis
+DOC_DRAFT = ${DOC_DRAFTBASE}-02
+DOC_SRC = yang-usage.txt
+DOC_BACK = yang-usage-back.xml
+INCLUDES =
 
-draft := $(basename $(lastword $(sort $(wildcard draft-*.xml)) $(sort $(wildcard draft-*.md))))
+PYANG = pyang
+YANG2DSDL = yang2dsdl
 
-ifeq (,$(draft))
-$(warning No file named draft-*.md or draft-*.xml)
-$(error Read README.md for setup instructions)
-endif
+OUTLINE2XML = $(HOME)/swdev/yang-gang/bin/outline2xml
+XML2RFC = $(HOME)/swdev/yang-gang/bin/xml2rfc.tcl
 
-draft_type := $(suffix $(firstword $(wildcard $(draft).md $(draft).xml)))
+FONT_CHANGE = \
+-e 's/background-color: \#CCC/background-color: \#FFF/' \
+-e 's:<br */> *<hr */>::g' \
+-e '/class="TOCbug"/d' \
 
-current_ver := $(shell git tag | grep '$(draft)-[0-9][0-9]' | tail -1 | sed -e"s/.*-//")
-ifeq "${current_ver}" ""
-next_ver ?= 00
-else
-next_ver ?= $(shell printf "%.2d" $$((1$(current_ver)-99)))
-endif
-next := $(draft)-$(next_ver)
+DOC_O2XARGS = \
+-n "${DOC_DRAFT}"
 
-.PHONY: latest submit clean
+all: txt html
 
-latest: $(draft).txt $(draft).html
+txt: $(DOC_DRAFT).txt
 
-submit: $(next).txt
-
-idnits: $(next).txt
-	$(idnits) $<
-
-clean:
-	-rm -f $(draft).txt $(draft).html index.html
-	-rm -f $(next).txt $(next).html
-	-rm -f $(draft)-[0-9][0-9].xml
-ifeq (md,$(draft_type))
-	-rm -f $(draft).xml
-endif
-
-$(next).xml: $(draft).xml
-	sed -e"s/$(basename $<)-latest/$(basename $@)/" $< > $@
-
-.INTERMEDIATE: $(draft).xml
-%.xml: %.md
-	$(kramdown-rfc2629) $< > $@
+html: $(DOC_DRAFT).html
 
 %.txt: %.xml
-	$(xml2rfc) $< -o $@ --text
-
-ifeq "$(shell uname -s 2>/dev/null)" "Darwin"
-sed_i := sed -i ''
-else
-sed_i := sed -i
-endif
+	@echo "Generating $@ ..."
+	@$(XML2RFC) $< $@
 
 %.html: %.xml
-	$(xml2rfc) $< -o $@ --html
-	$(sed_i) -f lib/addstyle.sed $@
+	@echo "Generating $@ ..."
+	@${RFC2629XSLT}  $< > $@ || (rm $@ ; false)
 
-### Below this deals with updating gh-pages
+%.ohtml: %.xml
+	@echo "Generating $@ ..."
+	@$(XML2RFC) $< $@
+	@mv $@ $@~
+	@sed ${FONT_CHANGE} < $@~ > $@
+	@rm $@~
 
-GHPAGES_TMP := /tmp/ghpages$(shell echo $$$$)
-.TRANSIENT: $(GHPAGES_TMP)
-ifeq (,$(TRAVIS_COMMIT))
-GIT_ORIG := $(shell git branch | grep '*' | cut -c 3-)
-else
-GIT_ORIG := $(TRAVIS_COMMIT)
-endif
+$(DOC_DRAFT).xml: ${DOC_SRC} ${DOC_BACK} ${INCLUDES}
+	@echo "Generating $@ ..."
+	@$(OUTLINE2XML) ${DOC_O2XARGS} $< > $@ || (rm $@ ; false)
 
-# Only run upload if we are local or on the master branch
-IS_LOCAL := $(if $(TRAVIS),,true)
-ifeq (master,$(TRAVIS_BRANCH))
-IS_MASTER := $(findstring false,$(TRAVIS_PULL_REQUEST))
-else
-IS_MASTER :=
-endif
+$(DOC_DRAFT).fxml: ${DOC_SRC} ${DOC_BACK} ${INCLUDES}
+	@echo "Generating $@ ..."
+	@$(OUTLINE2XML) -D ${DOC_O2XARGS} $< > $@ || (rm $@ ; false)
 
-index.html: $(draft).html
-	cp $< $@
+RFC2629XSLT = xsltproc --path $(HOME)/swdev/yang-gang/bin $(HOME)/swdev/yang-gang/bin/rfc2629-yang.xslt
 
-ghpages: index.html $(draft).txt
-ifneq (,$(or $(IS_LOCAL),$(IS_MASTER)))
-	mkdir $(GHPAGES_TMP)
-	cp -f $^ $(GHPAGES_TMP)
-	git clean -qfdX
-ifeq (true,$(TRAVIS))
-	git config user.email "ci-bot@example.com"
-	git config user.name "Travis CI Bot"
-	git checkout -q --orphan gh-pages
-	git rm -qr --cached .
-	git clean -qfd
-	git pull -qf origin gh-pages --depth=5
-else
-	git checkout gh-pages
-	git pull
-endif
-	mv -f $(GHPAGES_TMP)/* $(CURDIR)
-	git add $^
-	if test `git status -s | wc -l` -gt 0; then git commit -m "Script updating gh-pages."; fi
-ifneq (,$(GH_TOKEN))
-	@echo git push https://github.com/$(TRAVIS_REPO_SLUG).git gh-pages
-	@git push https://$(GH_TOKEN)@github.com/$(TRAVIS_REPO_SLUG).git gh-pages
-endif
-	-git checkout -qf "$(GIT_ORIG)"
-	-rm -rf $(GHPAGES_TMP)
-endif
+$(DOC_DRAFT).html: $(DOC_DRAFT).fxml
+	${RFC2629XSLT}  $< > $@ || (rm $@ ; false)
+
+validate:
+	$(PYANG) $(INCLUDES)
+
+clean:
+	rm -f $(DOC_DRAFTBASE)-*.txt \
+		$(DOC_DRAFTBASE)-*.xml \
+		$(DOC_DRAFTBASE)-*.html \
+		$(DOC_DRAFTBASE)-*.fxml
+	rm -f *.rng *.dsrl *.sch
