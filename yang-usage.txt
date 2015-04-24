@@ -729,12 +729,12 @@ will grow over time.
 The separation of configuration data and operational state SHOULD
 be considered carefully. It is often useful to define separate
 top-level containers for configuration and non-configuration data.
-There SHOULD only be one top-level data node defined
-in each YANG module for all configuration data nodes,
-if any configuration data nodes are defined at all.
-There MAY be one top-level data node defined
-in each YANG module for all non-configuration data nodes,
-if any non-configuration data nodes are defined at all.
+
+The number of top-level data nodes within a module
+SHOULD be minimized. It is often useful to retrieve
+related information within a single subtree.
+If data is too distributed, is becomes difficult to
+retrieve all at once.
 
 The names and data organization SHOULD reflect persistent
 information, such as the name of a protocol.  The name
@@ -908,6 +908,79 @@ The description statement for the notification SHOULD
 specify if and how the notification identifies any data
 node resources associated with the specific event.
 
+** Feature Definitions
+
+The YANG "feature" statement is used to define a label for
+a set of optional functionality within a module.  The "if-feature"
+statement is used in the YANG statements associated with a feature.
+
+The set of YANG features available in a module should be considered
+carefully. The description-stmt within a feature-stmt MUST
+specify any interactions with other features.
+
+If there is a large set of objects associated with a YANG feature,
+then consider moving those objects to a separate module,
+instead of using a YANG feature.  Note that the set of features
+within a module is easily discovered by the reader, but
+the set of related modules within the entire YANG library
+is not as easy to identity. Module names with
+a common prefix can help readers identity the set of related
+modules, but this assumes the reader will have discovered
+and installed all the relevant modules.
+
+If one feature requires implementation of another feature,
+then an "if-feature" statement SHOULD be used in the
+dependent "feature" statement.
+
+For example, feature2 requires implementation of feature1:
+
+   feature feature1 {
+     description "Some protocol feature";
+   }
+
+   feature feature2 {
+     if-feature "feature1";
+     description "Another protocol feature";
+   }
+
+
+** Data Correlation
+
+Data can be correlated in various ways, using common data types,
+common data naming, and common data organization.
+There are several ways to extend the functionality of a module,
+based on the degree of coupling between the old and new
+functionality:
+
+- inline: update the module with new protocol-accessible objects.
+The naming and data organization of the original objects is used.
+The new objects are in the original module namespace.
+
+- augment: create a new module with new protocol-accessible objects
+that augment the original data structure.
+The naming and data organization of the original objects is used.
+The new objects are in the new module namespace.
+
+- mirror: create new objects in a new module or the original module,
+except use new a naming scheme and data location.  The naming
+can be coupled in different ways. Tight coupling is achieved
+with a "leafref" data type. This method SHOULD be used.
+If the new data instances are not limited to the values in use in the original
+data structure, then the "require-instance" sub-statement MUST
+be set to "false".  Loose coupling is achieved by using key leafs with
+the same data type as the original data structure.
+
+It is sometimes useful to separate configuration and operational
+state, so that they do not not even share the exact same
+naming characteristics.  The correlation between configuration the
+operational state data that is affected by changes in configuration
+is a complex problem. There may not be a simple 1:1 relationship
+between a configuration data node and an operational data node.
+Further work is needed in YANG to clarify this relationship.
+Protocol work may also be needed to allow a client to retrieve
+this type of information from a server.  At this time the
+best practice is to clearly document any relationship
+to other data structures in the "description" statement.
 
 * IANA Considerations @IANA@
 
@@ -1051,6 +1124,7 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 - Updated notifications section
 - Clarified conditional key leaf nodes
 - Clarify usage of 'uint64' and 'int64' data types
+- Added text on YANG feature usage
 
 *! start-appendix
 
