@@ -154,10 +154,10 @@ which is available online at:
     http://trustee.ietf.org/license-info/
 
 Each YANG module or submodule contained within an Internet-Draft or RFC 
-is considered to be a code component.  The strings '<CODE BEGINS>'
-and '<CODE ENDS>' MUST be used to identify each code component.
+is considered to be a code component.  The strings "<CODE BEGINS>"
+and "<CODE ENDS>" MUST be used to identify each code component.
 
-The '<CODE BEGINS>' tag SHOULD be followed by a string identifying
+The "<CODE BEGINS>" tag SHOULD be followed by a string identifying
 the file name specified in Section 5.2 of ^RFC6020^.
 The following example is for the '2010-01-18' revision
 of the 'ietf-foo' module:
@@ -176,10 +176,6 @@ of the 'ietf-foo' module:
 
 Note that this convention MUST NOT be used for example modules
 or module fragments.
-
-[FIXME: should a new convention called <EXAMPLE BEGINS>
-be added for YANG example modules?]
-
 
 ** Terminology Section
 
@@ -338,6 +334,17 @@ freely available from github:
 If the 'pyang' compiler is used, then the "--ietf" command line
 option SHOULD be used to identify any IETF guideline issues.
 
+** Module Extraction Tools
+
+A version of 'rfcstrip' is available which will extract YANG
+modules from an Internet Draft or RFC.  The 'rfcstrip' tool which supports
+YANG module extraction is freely available:
+
+  http://www.yang-central.org/twiki/pub/Main/YangTools/rfcstrip
+
+This tool can be used to verify that the "<CODE BEGINS>" and "<CODE ENDS>"
+tags are used correctly and that the normative YANG modules can be
+extracted correctly.
 
 * YANG Usage Guidelines @YangGuidelines@
 
@@ -385,6 +392,26 @@ Identifiers for all YANG identifiers
 in published modules MUST be between 1 and 64 characters in length.
 These include any construct specified as an 'identifier-arg-str'
 token in the ABNF in Section 12 of ^RFC6020^.
+
+*** Identifier Naming Conventions
+
+Identifiers SHOULD follow a consistent naming pattern
+throughout the module.  Only lower-case letters, numbers,
+and dashes SHOULD be used in identifier names.
+Upper-case characters and the underscore character MAY be used
+if the identifier represents a well-known value that
+uses these characters.
+
+Identifiers SHOULD include complete words and/or well-known
+acronyms or abbreviations.  Child nodes within a container
+or list SHOULD NOT replicate the parent identifier.
+YANG identifiers are hierarchical and are only meant to be
+unique within the the set of sibling nodes defined in 
+the same module namespace.
+
+It is permissible to use common identifiers such as "name"
+or "id" in data definition statements, especially if these
+data nodes share a common data type.
 
 ** Defaults
 
@@ -439,7 +466,7 @@ the parent list node.
 There SHOULD NOT be any 'when' statements applied to
 a key leaf node.  It is possible that a 'when' statement for
 an ancestor node of a key leaf will have the exact
-node-set result as the key leaf.  In such as case,
+node-set result as the key leaf.  In such a case,
 the 'when' statement for the key leaf is redundant
 and SHOULD be avoided.
 
@@ -712,8 +739,9 @@ statement values for Standards Track modules:
 Note that a different URN prefix string SHOULD be used for non-Standards-Track
 modules. The string SHOULD be selected according to the guidelines in ^RFC6020^.
 
-The following examples of non-Standards-Track modules are only suggestions.  There are no
-guidelines for this type of URN in this document:
+The following examples are for non-Standards-Track modules.
+The domain "example.com" SHOULD be used in all namespace URIs
+for example modules.
 
     http://example.com/ns/example-interfaces
 
@@ -928,6 +956,14 @@ a common prefix can help readers identity the set of related
 modules, but this assumes the reader will have discovered
 and installed all the relevant modules.
 
+Another consideration for deciding whether to create a new module
+or add a YANG feature is the stability of the module in question.
+It may be desirable to have a stable base module that is
+not changed frequently.  If new functionality is placed in
+a separate module, then the base module does not need to
+be republished.  If it is designed as a YANG feature then
+the module will need to be republished.
+
 If one feature requires implementation of another feature,
 then an "if-feature" statement SHOULD be used in the
 dependent "feature" statement.
@@ -942,6 +978,111 @@ For example, feature2 requires implementation of feature1:
      if-feature "feature1";
      description "Another protocol feature";
    }
+
+
+** Augment Statements
+
+The YANG "augment" statement is used to define a set of
+data definition statements that will be added as child nodes
+of a target data node.  The module namespace for these
+data nodes will be the augmenting module, not the augmented
+module.
+
+A top-level "augment" statement SHOULD NOT be used if the
+target data node is in the same module or submodule as the
+evaluated "augment" statement.  The data definition statements
+SHOULD be added inline instead.
+
+*** Conditional Augment Statements
+
+The "augment" statement is often used together with
+the "when" statement and/or "if-feature" statement
+to make the augmentation conditional on some portion
+of the data model.
+
+The following example from ^RFC7223^ shows how 
+a conditional container called "ethernet" is added to the
+"interface" list only for entries of the
+type "ethernetCsmacd".
+
+     augment "/if:interfaces/if:interface" {
+         when "if:type = 'ianaift:ethernetCsmacd'";
+
+         container ethernet {
+             leaf duplex {
+                 ...
+             }
+         }
+     }
+
+
+*** Conditionally Mandatory Data Definition Statements
+
+YANG has very specific rules about how configuration data
+can be updated in new releases of a module.  These rules
+allow an "old client" to continue interoperating with
+a "new server".
+
+If data nodes are added to an existing entry, the
+old client MUST NOT be required to provide any
+mandatory parameters that were not in the original
+module definition.
+
+It is possible to add conditional augment statements such
+that the old client would not know about the new condition,
+and would not specify the new condition. The conditional
+augment statement can contain mandatory objects only if
+the condition is false unless explicitly requested by
+the client.
+
+Only a conditional augment statement that uses the "when"
+statement form of condition can be used in this manner.
+The YANG features enabled on the server cannot be
+controlled by the client in any way, so it is not safe
+to add mandatory augmenting data nodes based on the
+"if-feature" statement.
+
+The XPath "when" statement condition MUST NOT reference
+data outside of target data node because the client
+does not have any control over this external data.
+
+In the following dummy example, it is OK to augment
+the "interface" entry with "mandatory-leaf" because
+the augmentation depends on support for "some-new-iftype".
+The old client does not know about this type so it would
+never select this type, and therefore not be adding
+a mandatory data node.
+
+  module my-module {
+    ...
+
+    identity some-new-iftype {
+       base iana:iana-interface-type;
+    }
+
+    augment "/if:interfaces/if:interface" {
+       when "if:type = 'mymod:some-new-iftype'";
+
+       leaf mandatory-leaf {
+          mandatory true;
+          ...
+       }
+    }
+  }
+
+Note that this practice is safe only for creating data resources.
+It is not safe for replacing or modifying resources if the
+client does not know about the new condition. The YANG data model
+MUST be packaged in a way that requires the client to be aware
+of the mandatory data nodes if it is aware of the condition
+for this data.  In the example above, the "some-new-iftype"
+identity is defined in the same module as the "mandatory-leaf"
+data definition statement.
+
+This practice is not safe for identities defined in a common
+module such as "iana-if-type" because the client is not
+required to know about "my-module" just because it knows about
+the "iana-if-type" module.
 
 
 ** Data Correlation
@@ -964,11 +1105,14 @@ The new objects are in the new module namespace.
 - mirror: create new objects in a new module or the original module,
 except use new a naming scheme and data location.  The naming
 can be coupled in different ways. Tight coupling is achieved
-with a "leafref" data type. This method SHOULD be used.
+with a "leafref" data type, with the "require-instance" sub-statement
+set to "true". This method SHOULD be used.
+
 If the new data instances are not limited to the values in use in the original
 data structure, then the "require-instance" sub-statement MUST
 be set to "false".  Loose coupling is achieved by using key leafs with
-the same data type as the original data structure.
+the same data type as the original data structure.  This has the same
+semantics as setting the "require-instance" sub-statement to "false".
 
 It is sometimes useful to separate configuration and operational
 state, so that they do not not even share the exact same
@@ -1125,12 +1269,24 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 - Clarified conditional key leaf nodes
 - Clarify usage of 'uint64' and 'int64' data types
 - Added text on YANG feature usage
+- Added Identifier Naming Conventions
+- Clarified use of mandatory nodes with conditional augmentations
+- Clarified namespace and domain conventions for example modules
 
 *! start-appendix
 
 * Change Log
 
     -- RFC Ed.: remove this section before publication.  
+
+** 02 to 03
+
+- Updated draft based on github data tracker issues added
+by Benoit Clause (Issues 12 - 18)
+
+** 01 to 02
+
+- Updated draft based on mailing list comments.
 
 ** 00 to 01
 
