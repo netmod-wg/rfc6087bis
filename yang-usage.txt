@@ -414,13 +414,12 @@ or "id" in data definition statements, especially if these
 data nodes share a common data type.
 
 Identifiers SHOULD NOT carry any special semantics that
-identify data modelling properties. Only YANG statements
-and external statements defined with YANG extensions
-are designed to convey data modelling properties.
-For example, naming an object "config" or "state"
-does not change the "config" statement property.
-Only reserved keywords can be assigned specific semantics
-in YANG.
+identify data modelling properties. Only YANG statements and YANG
+extension statements are designed to convey machine readable data
+modelling properties. For example, naming an object "config" or
+"state" does not change whether it is configuration data or state
+data. Only defined YANG statements or YANG extension statements can
+be used to assign semantics in a machine readable format in YANG.
 
 ** Defaults
 
@@ -1184,9 +1183,27 @@ An interface may be in use that has not been configured at all.
 Therefore, the operational state for an interface cannot be located
 within the configuration for that same interface.
 
+
 Sometimes the configured value represents some sort of
 procedure to be followed, in which the system will
 select an actual value, based on protocol negotiation.
+
+   leaf duplex-admin-mode {
+     type enumeration {
+       enum auto;
+       enum half;
+       enum full;
+     }
+   }
+
+   leaf duplex-oper-mode {
+     config false;
+     type enumeration {
+       enum half;
+       enum full;
+     }
+   }
+
 For example a "duplex" mode configuration may be "auto"
 to auto-negotiate the actual value to be used.  The operational
 parameter will never contain the value "auto".  It will always contain
@@ -1210,9 +1227,22 @@ the data model.
     container foo {
       uses parms;  // these are all config=true by default
       state {
-        config false;
+        config false;  // only exists if foo config exists
         uses parms;
       }
+    }
+
+Note that this mechanism can also be used if the configuration
+and operational state data are in separate sub-trees:
+
+    container bar { // bar config can exist without bar-state
+      config true;
+      uses parms;
+    }
+
+    container bar-state {  // bar-state can exist without bar
+      config false;
+      uses parms;
     }
 
 The need to replicate objects or define different operational state
