@@ -413,6 +413,15 @@ It is permissible to use common identifiers such as "name"
 or "id" in data definition statements, especially if these
 data nodes share a common data type.
 
+Identifiers SHOULD NOT carry any special semantics that
+identify data modelling properties. Only YANG statements
+and external statements defined with YANG extensions
+are designed to convey data modelling properties.
+For example, naming an object "config" or "state"
+does not change the "config" statement property.
+Only reserved keywords can be assigned specific semantics
+in YANG.
+
 ** Defaults
 
 In general, it is suggested that substatements
@@ -1125,6 +1134,95 @@ Protocol work may also be needed to allow a client to retrieve
 this type of information from a server.  At this time the
 best practice is to clearly document any relationship
 to other data structures in the "description" statement.
+
+
+** Operational State
+
+In YANG, any data that has a "config" statement value of "false"
+could be considered operational state.  The relationship between
+configuration (i.e., "config" statement has a value of "true")
+and operational state can be complex.
+
+One challenge for client developers is determining if
+the configured value is being used, which requires the
+developer to know which operational state parameters are
+associated with the particular configuration object
+(or group of objects).
+
+The simplest interaction between configuration and operational state
+is "none".  For example, the arbitrary administrative name or
+sequence number assigned to an access control rule.  The configured
+value is always the value that is being used by the system.
+
+However, some configuration parameters interact with routing
+and other signalling protocols, such that the operational value in use
+by the system may not be the same as the configured value.
+Other parameters specify the desired state, but environmental
+and other factors can cause the actual state to be different.
+
+For example a "temperature" configuration setting only
+represents the desired temperature.  An operational state
+parameter is needed that reports the actual temperature
+in order to determine if the cooling system is operating
+correctly.  YANG has no mechanism other than the "description"
+statement to associate the desired temperature and
+the actual temperature.
+
+Careful consideration needs to be given to the location
+of operational state data.  It can either be located
+within the configuration subtree for which it applies,
+or it can be located outside the particular configuration subtree.
+Placing operation state within the configuration subtree
+is appropriate if the operational values can only exist
+if the configuration exists.
+
+The "interfaces" and "interfaces-state" subtrees defined in ^RFC7223^
+are an example of a complex relationship between configuration
+and operational state.  The operational values can include interface
+entries that have been discovered or initialized by the system.
+An interface may be in use that has not been configured at all.
+Therefore, the operational state for an interface cannot be located
+within the configuration for that same interface.
+
+Sometimes the configured value represents some sort of
+procedure to be followed, in which the system will
+select an actual value, based on protocol negotiation.
+For example a "duplex" mode configuration may be "auto"
+to auto-negotiate the actual value to be used.  The operational
+parameter will never contain the value "auto".  It will always contain
+the result of the auto-negotiation, such as "half" or "full".
+This is just one way in which the configuration data model
+is not exactly the same as the operational data model.
+Another is if the detailed properties of the data are different
+for configured vs. learned entries.
+
+If all the data model properties are aligned between configuration
+and operational data, then it can be useful to define the
+configuration parameters within a grouping, and then replicate that
+grouping within the operational state portion of
+the data model.
+
+    grouping parms {
+       // do not use config-stmt in any of the nodes
+       // placed in this grouping
+    }
+
+    container foo {
+      uses parms;  // these are all config=true by default
+      state {
+        config false;
+        uses parms;
+      }
+    }
+
+The need to replicate objects or define different operational state
+objects depends on the data model.  It is not possible to define
+one approach that will be optimal for all data models.
+Designers SHOULD describe the relationship in detail between
+configuration objects and any associated operational state objects.
+The "description" statements for both the configuration and the
+operational state SHOULD be used for this purpose.
+
 
 * IANA Considerations @IANA@
 
