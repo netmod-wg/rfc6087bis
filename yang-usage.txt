@@ -386,6 +386,54 @@ Once a module name is published, it MUST NOT be reused,
 even if the RFC containing the module is reclassified
 to 'Historic' status.
 
+** Prefixes
+
+All YANG definitions are scoped by the module containing the
+definition being referenced.  This allows definitions 
+from multiple modules to be used, even if the names are not unique.
+In the example below, the identifier "foo" is used in all 3 modules:
+
+    module example-foo {
+      namespace "http://example.com/ns/foo";
+      prefix f;
+
+      container foo;
+   }
+
+    module example-bar {
+      namespace "http://example.com/ns/bar";
+      prefix b;
+
+      typedef foo { type uint32; }
+   }
+
+    module example-one {
+      namespace "http://example.com/ns/one";
+      prefix one;
+      import example-foo { prefix f; }
+      import example-bar { prefix b; }
+
+      augment "/f:foo" {
+         leaf foo { type b:foo; }
+      }
+   }
+
+YANG defines the following rules for prefix usage:
+- Prefixes are never allowed for built in data types and YANG keywords.
+- A prefix MUST be used for any external statement (i.e., a statement
+defined with the YANG "extension" statement)
+- The proper module prefix MUST be used for all identifiers imported from
+other modules
+- The proper module prefix MUST be used for all identifiers included from
+a submodule.
+
+The following guidelines apply to prefix usage of the current (local) module:
+- The local module prefix SHOULD be used instead of no prefix in all path expressions.
+- The local module prefix MUST be used instead of no prefix in all "default"
+statements for an "identityref" or "instance-identifier" data type
+- The lcaol module prefix MAY be used for references to typedefs, groupings, extensions,
+features, and identities defined in the module.
+
 ** Identifiers
 
 Identifiers for all YANG identifiers
@@ -483,6 +531,55 @@ and SHOULD be avoided.
 This section describes guidelines for using the
 XML Path Language  ^W3C.REC-xpath-19991116^ (XPath)
 within YANG modules.
+
+*** XPath Evaluation Contexts
+
+YANG defines 5 separate contexts for evaluation of XPath statements:
+
+1) The "running" datastore: collection of all YANG configuration
+data nodes.  The document root is the conceptual container,
+(e.g., "config" in the "edit-config" operation), which is the
+parent of all top-level data definition statements with a "config"
+statement value of "true".
+
+2) State data + the "running" datastore: collection
+of all YANG data nodes.   The document root is the conceptual container,
+parent of all top-level data definition statements.
+
+3) Notification: an event notification document. The document root
+is the notification element.
+
+4) RPC Input: The document root is the conceptual "input" node,
+which is the parent of all RPC input parameter definitions.
+
+5) RPC Output: The document root is the conceptual "output" node,
+which is the parent of all RPC output parameter definitions.
+
+Note that these XPath contexts cannot be mixed. For example,
+a "when" statement in a notification context cannot reference
+configuration data.
+
+    notification foo {
+      leaf mtu {
+        // NOT OK because when-stmt context is this notification
+        when "/if:interfaces/if:interface[name='eth0']";
+        type leafref {
+          // OK because path-stmt has a different context
+          path "/if:interfaces/if:interface/if:mtu";
+        }
+      }
+    }
+
+It is especially important to consider the XPath evaluation
+context for XPath expressions defined in groupings.
+An XPath expression defined in a grouping
+may not be portable, meaning it cannot be used in multiple
+contexts and produce proper results.
+
+If the XPath expressions defined in a grouping are intended
+for a particular context, then this context SHOULD be identified
+in the "description" statement for the grouping.
+
 
 *** Function Library
 
@@ -616,6 +713,51 @@ are expected to match the wildcard expansion.
         Matches objects that have augmented the services container.";
    }
          
+*** Boolean Expressions
+
+The YANG "must" and "when" statements use an XPath boolean expression
+to define the test condition for the statement.  It is important
+to specify these expressions in a way that will not cause inadvertent
+changes in the result if the objects referenced in the expression
+are updated in future revisions of the module.
+
+For example, the leaf "foo2" must exist if the leaf "foo1" is equal
+to "one" or "three":
+
+     leaf foo1 {
+       type enumeration {
+          enum one;
+          enum two;
+          enum three;
+       }
+     }
+
+     leaf foo2 {
+       // INCORRECT
+       must "/f:foo1 != 'two'";
+       type string;
+     }
+
+     leaf foo2 {
+       // CORRECT
+       must "/f:foo1 = 'one' or /f:foo1 = 'three'";
+       type string;
+     }
+
+In the next revision of the module, leaf "foo1" is extended
+with a nem enum named "four":
+
+     leaf foo1 {
+       type enumeration {
+          enum one;
+          enum two;
+          enum three;
+          enum four;
+       }
+     }
+
+Now the first XPath expression will allow the enum "four"
+to be accepted in addition to the "one" and "three" enum values.
 
 ** Lifecycle Management
 
@@ -797,9 +939,50 @@ can be specified on that subject.
 Data model designers SHOULD use the most appropriate
 built-in data type for the particular application.
 
+
+The signed numeric data types (i.e., 'int8',
+'int16', 'int32', and 'int64') SHOULD NOT be used unless
+negative values are allowed for the desired semantics.
+
+*** Fixed Value Extensibility
+
+If the set of values is fixed and the data type contents
+are controlled by a single naming authority, then an
+enumeration data type SHOULD be used.
+
+    leaf foo {
+      type enumeration {
+        enum one;
+        enum two;
+      }
+    }
+
 If extensibility of enumerated values is required,
 then the 'identityref' data type SHOULD be used
 instead of an enumeration or other built-in type.
+
+    identity foo-type {
+      description "Base for the extensible type";
+    }
+
+    identity one {
+      base f:foo-type;
+    }
+    identity two {
+      base f:foo-type;
+    }
+
+    leaf foo {
+      type identityref {
+        base f:foo-type;
+      }
+    }
+
+Note that any module can declare an identity with base "foo-type"
+that is valid for the "foo" leaf. Identityref values are
+considered to be qualified names.
+
+*** Patterns and Ranges
 
 For string data types, if a machine-readable pattern
 can be defined for the desired semantics, then
@@ -807,23 +990,79 @@ one or more pattern statements SHOULD be present.
 A single quoted string SHOULD be used to specify the pattern,
 since a double-quoted string can modify the content.
 
+The following typedef from ^RFC6991^ demonstrates the proper
+use of the "pattern" statement:
+
+    typedef ipv4-address-no-zone {
+      type inet:ipv4-address {
+        pattern '[0-9\.]*';
+      }
+      ...
+    }
+
 For string data types, if the length of the string
 is required to be bounded in all implementations,
 then a length statement MUST be present.
+
+The following typedef from ^RFC6991^ demonstrates the proper
+use of the "length" statement:
+
+    typedef yang-identifier {
+      type string {
+        length "1..max";
+        pattern '[a-zA-Z_][a-zA-Z0-9\-_.]*';
+        pattern '.|..|[^xX].*|.[^mM].*|..[^lL].*';
+      }
+      ...
+    }
 
 For numeric data types, if the values allowed
 by the intended semantics are different than
 those allowed by the unbounded intrinsic data 
 type (e.g., 'int32'), then a range statement SHOULD be present.
 
-The signed numeric data types (i.e., 'int8',
-'int16', 'int32', and 'int64') SHOULD NOT be used unless
-negative values are allowed for the desired semantics.
+The following typedef from ^RFC6991^ demonstrates the proper
+use of the "range" statement:
+
+    typedef dscp {
+      type uint8 {
+         range "0..63";
+      }
+      ...
+    }
+
+*** Enumerations and Bits
 
 For 'enumeration' or 'bits' data types, the semantics for
 each 'enum' or 'bit' SHOULD be documented.  A separate
 description statement (within each 'enum' or 'bit'
 statement) SHOULD be present.
+
+    leaf foo {
+      // INCORRECT
+      type enumeration {
+        enum one;
+        enum two;
+      }
+      description
+        "The foo enum...
+         one: The first enum
+         two: The second enum";
+    }
+
+    leaf foo {
+      // CORRECT
+      type enumeration {
+        enum one {
+          description "The first enum";
+        }
+        enum two {
+          description "The second enum";
+        }
+      }
+      description
+        "The foo enum...  ";
+    }
 
 ** Reusable Type Definitions
 
@@ -1023,7 +1262,6 @@ type "ethernetCsmacd".
          }
      }
 
-
 *** Conditionally Mandatory Data Definition Statements
 
 YANG has very specific rules about how configuration data
@@ -1182,7 +1420,6 @@ entries that have been discovered or initialized by the system.
 An interface may be in use that has not been configured at all.
 Therefore, the operational state for an interface cannot be located
 within the configuration for that same interface.
-
 
 Sometimes the configured value represents some sort of
 procedure to be followed, in which the system will
