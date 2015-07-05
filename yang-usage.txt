@@ -1330,6 +1330,48 @@ module such as "iana-if-type" because the client is not
 required to know about "my-module" just because it knows about
 the "iana-if-type" module.
 
+** Deviation Statements
+
+The YANG "deviation" statement cannot appear in IETF YANG modules,
+but it can be useful for documenting server capabilities.
+Deviation statements are not reusable and typically not shared across
+all platforms.
+
+There are several reasons that deviations might be needed in
+an implementation, e.g., an object cannot be supported
+on all platforms, or feature delivery is done
+in multiple development phases.
+
+It is suggested that deviation statements be defined in separate
+modules from regular YANG definitions.  This allows the deviations to be
+platform-specific and/or temporary.
+
+The "max-elements" statement is intended to describe an architectural
+limit to the number of list entries.  It is not intended to
+describe platform limitiations. It is better to use a
+"deviation" statement for the platforms that have a hard resource limit.
+
+Example documenting platform resource limits:
+
+  Wrong: (max-elements in the list itself)
+
+     container backups {
+       list backup {
+          ...
+          max-elements  10;
+          ...
+       }
+     }
+
+  Correct: (max-elements in a deviation)
+
+     deviation /bk:backups/bk:backup {
+       deviate add {
+          max-elements  10;
+       }
+     }
+
+
 
 ** Data Correlation
 
@@ -1490,6 +1532,22 @@ configuration objects and any associated operational state objects.
 The "description" statements for both the configuration and the
 operational state SHOULD be used for this purpose.
 
+** Performance Considerations
+
+It is generally likely that certain YANG statements require more
+runtime resources than other statements.  Although there are no
+performance requirements for YANG validation, the following information
+MAY be considered when designing YANG data models:
+
+- Lists are generally more expensive than containers
+- "when-stmt" evaluation is generally more expensive than "if-feature"
+or "choice" statements
+- "must" statement is generally more expensive than "min-entries",
+"max-entries", "mandatory", or "unique" statements
+- "identityref" leafs are generally more expensive than "enumeration" leafs
+- "leafref" and "instance-identifier" types with "requite-instance" set to true
+are generally more expensive than if "require-instance" is set to false
+
 
 * IANA Considerations @IANA@
 
@@ -1643,6 +1701,10 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 * Change Log
 
     -- RFC Ed.: remove this section before publication.  
+
+** 03 ot 04
+
+- Added sections for deviation statements and performance considerations
 
 ** 02 to 03
 
