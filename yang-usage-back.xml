@@ -170,21 +170,25 @@ specifications of each URI scheme.
 </reference>
   <!-- end 5741 -->
 
-  <reference anchor="RFC6020">
-    <front>
-      <title>YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)</title>
-      <author initials="M." surname="Bjorklund" fullname="M. Bjorklund">
-	<organization/>
-      </author>
-      <date year="2010" month="October"/>
-      <abstract>
-	<t>YANG is a data modeling language used to model configuration and state data manipulated by the Network Configuration Protocol (NETCONF), NETCONF remote procedure calls, and NETCONF notifications. [STANDARDS TRACK]</t>
-      </abstract>
-    </front>
-    <seriesInfo name="RFC" value="6020"/>
-    <format type="TXT" octets="324178" target="http://www.rfc-editor.org/rfc/rfc6020.txt"/>
-  </reference>
-  <!-- end 6020 -->
+
+<reference anchor='I-D.ietf-netmod-rfc6020bis'>
+<front>
+<title>YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)</title>
+
+<author initials='M' surname='Bjorklund' fullname='Martin Bjorklund'>
+    <organization />
+</author>
+
+<date month='July' day='5' year='2015' />
+
+<abstract><t>YANG is a data modeling language used to model configuration and state data manipulated by the Network Configuration Protocol (NETCONF), NETCONF remote procedure calls, and NETCONF notifications. This document obsoletes RFC 6020.</t></abstract>
+
+</front>
+
+<seriesInfo name='Internet-Draft' value='draft-ietf-netmod-rfc6020bis-06' />
+<format type='TXT'
+        target='http://www.ietf.org/internet-drafts/draft-ietf-netmod-rfc6020bis-06.txt' />
+</reference>
 
   <reference anchor='RFC6241'>
       <front>

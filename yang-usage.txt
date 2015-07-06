@@ -18,7 +18,7 @@ requires a modular set of data models, which can be reused
 and extended over time.
 
 This document defines a set of usage guidelines for
-Standards Track documents containing ^RFC6020^
+Standards Track documents containing ^I-D.ietf-netmod-rfc6020bis^
 data models.  YANG is used to define
 the data structures, protocol operations, and notification content
 used within a NETCONF server.  A server that supports a particular
@@ -86,7 +86,7 @@ and are not redefined here:
 
 ** YANG Terms
 
-The following terms are defined in ^RFC6020^
+The following terms are defined in ^I-D.ietf-netmod-rfc6020bis^
 and are not redefined here:
 
 - data node
@@ -158,7 +158,7 @@ is considered to be a code component.  The strings "<CODE BEGINS>"
 and "<CODE ENDS>" MUST be used to identify each code component.
 
 The "<CODE BEGINS>" tag SHOULD be followed by a string identifying
-the file name specified in Section 5.2 of ^RFC6020^.
+the file name specified in Section 5.2 of ^I-D.ietf-netmod-rfc6020bis^.
 The following example is for the '2010-01-18' revision
 of the 'ietf-foo' module:
 
@@ -223,7 +223,7 @@ sections to briefly describe the structure of the modules defined
 in the specification.
 
 If the module(s) defined by the specification imports definitions
-from other modules (except for those defined in the ^RFC6020^
+from other modules (except for those defined in the ^I-D.ietf-netmod-rfc6020bis^
 or ^RFC6991^ documents), or are always implemented in
 conjunction with other modules, then those facts MUST be noted in
 the overview section, as MUST be noted any special 
@@ -232,7 +232,7 @@ interpretations of definitions in other modules.
 ** Definitions Section
 
 This section contains the module(s) defined by the specification.
-These modules MUST be written using the YANG syntax defined in ^RFC6020^.
+These modules MUST be written using the YANG syntax defined in ^I-D.ietf-netmod-rfc6020bis^.
 A YIN syntax version of the module MAY also be present in the document.
 There MAY also be other types of modules present in the document,
 such as SMIv2, which are not affected by these guidelines.
@@ -291,7 +291,7 @@ administered.
 Specifically, if any YANG module namespace statement value contained
 in the document is not already registered with IANA, then a
 new YANG Namespace registry entry MUST be requested from the
-IANA.  The ^RFC6020^ specification includes the procedure
+IANA.  The ^I-D.ietf-netmod-rfc6020bis^ specification includes the procedure
 for this purpose in its IANA Considerations section.
 
 *** Documents that Extend an Existing Namespace
@@ -349,7 +349,7 @@ extracted correctly.
 * YANG Usage Guidelines @YangGuidelines@
 
 In general, modules in IETF Standards Track specifications MUST
-comply with all syntactic and semantic requirements of YANG ^RFC6020^.
+comply with all syntactic and semantic requirements of YANG ^I-D.ietf-netmod-rfc6020bis^.
 The guidelines in this section are intended
 to supplement the YANG specification, which is
 intended to define a minimum set of conformance
@@ -367,7 +367,7 @@ minimum conformance requirements are included here.
 
 Modules contained in Standards Track documents
 SHOULD be named according to the guidelines in
-the IANA Considerations section of ^RFC6020^.
+the IANA Considerations section of ^I-D.ietf-netmod-rfc6020bis^.
 
 A distinctive word or acronym (e.g., protocol name
 or working group acronym) SHOULD be used in the
@@ -439,7 +439,7 @@ features, and identities defined in the module.
 Identifiers for all YANG identifiers
 in published modules MUST be between 1 and 64 characters in length.
 These include any construct specified as an 'identifier-arg-str'
-token in the ABNF in Section 12 of ^RFC6020^.
+token in the ABNF in Section 13 of ^I-D.ietf-netmod-rfc6020bis^.
 
 *** Identifier Naming Conventions
 
@@ -887,7 +887,7 @@ statement values for Standards Track modules:
     urn:ietf:params:xml:ns:yang:ietf-netconf
 
 Note that a different URN prefix string SHOULD be used for non-Standards-Track
-modules. The string SHOULD be selected according to the guidelines in ^RFC6020^.
+modules. The string SHOULD be selected according to the guidelines in ^I-D.ietf-netmod-rfc6020bis^.
 
 The following examples are for non-Standards-Track modules.
 The domain "example.com" SHOULD be used in all namespace URIs
@@ -1348,7 +1348,7 @@ platform-specific and/or temporary.
 
 The "max-elements" statement is intended to describe an architectural
 limit to the number of list entries.  It is not intended to
-describe platform limitiations. It is better to use a
+describe platform limitations. It is better to use a
 "deviation" statement for the platforms that have a hard resource limit.
 
 Example documenting platform resource limits:
@@ -1548,6 +1548,32 @@ or "choice" statements
 - "leafref" and "instance-identifier" types with "requite-instance" set to true
 are generally more expensive than if "require-instance" is set to false
 
+** YANG 1.1 Guidelines
+
+TODO: need more input on YANG 1.1 guidelines
+
+*** Importing Multiple Revisions
+
+Standard modules SHOULD NOT import multiple revisions of the same module
+into a module.  This MAY be done if the authors can demonstrate that
+the "avoided" definitions from most recent of the multiple revisions are somehow
+broken or harmful to interoperability.
+
+*** Using Feature Logic
+
+The YANG 1.1 feature logic is much more expressive than YANG 1.0.
+A "description" statement SHOULD describe the "if-feature" logic in text,
+to help readers understand the module.
+
+YANG features SHOULD be used instead of the "when" statement, if possible.
+This reduces server implementation complexity and might reduce runtime resource
+requirements as well.
+
+*** anyxml vs. anydata
+
+The "anyxml" statement MUST NOT be used to represent a conceptual subtree
+of YANG data nodes.  The "anydata" statment MUST be used for this purpose.
+
 
 * IANA Considerations @IANA@
 
@@ -1705,6 +1731,8 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 ** 03 ot 04
 
 - Added sections for deviation statements and performance considerations
+- Added YANG 1.1 section
+- Updated YANG reference from 1.0 to 1.1
 
 ** 02 to 03
 
@@ -1805,7 +1833,7 @@ for the following IANA registries:
 
    YANG Module Registry: Register the YANG module name, prefix,
       namespace, and RFC number, according to the rules specified
-      in [RFC6020].
+      in [I-D.ietf-netmod-rfc6020bis].
 
 - References -- verify that the references are properly divided
 between normative and informative references, that RFC 2119 is
