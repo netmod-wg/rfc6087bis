@@ -820,9 +820,10 @@ This value is usually assigned by the IANA.
 
 The organization statement MUST be present.
 If the module is contained in a document
-intended for Standards Track status, then
+intended for IETF Standards Track status, then
 the organization SHOULD be the IETF working group
-chartered to write the document.
+chartered to write the document.  For other standards
+organizations, a similar approach is also suggested.
 
 The contact statement MUST be present.
 If the module is contained in a document
@@ -836,7 +837,8 @@ In addition, the Area Director and other contact
 information MAY be present.
 
 The description statement MUST be present.
-The appropriate IETF Trust Copyright text MUST be present,
+For modules published within IETF documents,
+the appropriate IETF Trust Copyright text MUST be present,
 as described in ^MODULECOPY^.
 
 If the module relies on information contained
@@ -1119,6 +1121,36 @@ statement MUST be present.
 
 ** Reusable Groupings
 
+A reusable grouping is a YANG grouping that can be imported
+by another module, and is intended for use by other modules.
+This is not the same as a grouping that is used within the
+module it is defined, but happens to be exportable to another
+module because it is defined at the top-level of the YANG module.
+
+The following guidelines apply to reusable groupings,
+in order to make them as robust as possible:
+
+- Clearly identify the purpose of the grouping in the
+"description" statement.
+
+- There are 5 different XPath contexts in YANG (rpc/input,
+rpc/output, notification, config=true data nodes, and all data nodes).
+Clearly identify which XPath contexts are applicable or excluded
+for the grouping.
+
+- Do not reference data outside the grouping in any "path",
+"must", or "when" statements.
+
+- Do not include a "default" sub-statement on a leaf or choice unless
+the value applies on all possible contexts.
+
+- Do not include a "config" sub-statement on a data node unless
+the value applies on all possible contexts.
+
+- Clearly identify any external dependencies in the grouping
+"description" statement, such as nodes referenced
+by absolute path from a "path", "must", or "when" statement.
+
 
 ** Data Definitions
 
@@ -1168,6 +1200,14 @@ then the max-elements statements SHOULD be present.
 If any 'must' or 'when' statements are used within the
 data definition, then the data definition description statement
 SHOULD describe the purpose of each one.
+
+The "choice" statement is allowed to be directly present within
+a "case" statement in YANG 1.1. This needs to be considered
+carefully. Consider simply including the nested "choice"
+as additional "case" statements within the parent "choice" statement.
+Note that the "mandatory" and "default" statements within
+a nested "choice" statement only apply if the "case" containing
+the nested "choice" statement is first selected.
 
 ** Operation Definitions
 
@@ -1400,6 +1440,32 @@ Example documenting platform resource limits:
      }
 
 
+** Extension Statements
+
+The YANG "extension" statement is used to specify external
+definitions. This appears in the YANG syntax as
+an "unknown-statement". Usage of extension statements in
+a published module needs to be considered carefully.
+
+The following guidelines apply to the usage of YANG extensions:
+
+- The semantics of the extension MUST NOT contradict any
+YANG statements. Extensions can add semantics not covered
+by the normal YANG statements.
+
+- The module containing the extension statement MUST clearly
+identify the conformance requirements for the extension.
+It should be clear whether all implementations of the YANG
+module containing the extension need to also implement
+the extension. If not, identify what conditions apply that would
+require implementation of the extension.
+
+- The extension MUST clearly identify where it can be used
+within other YANG statements.
+
+- The extension MUST clearly identify if YANG statements or other
+extensions are allowed or required within the extension as
+sub-statements.
 
 ** Data Correlation
 
@@ -1600,7 +1666,7 @@ requirements as well.
 *** anyxml vs. anydata
 
 The "anyxml" statement MUST NOT be used to represent a conceptual subtree
-of YANG data nodes.  The "anydata" statment MUST be used for this purpose.
+of YANG data nodes.  The "anydata" statement MUST be used for this purpose.
 
 
 * IANA Considerations @IANA@
@@ -1770,6 +1836,13 @@ example modules, and modules from other SDOs.
 - Added prefix value selection guidelines
 
 - Added new section on guidelines for reusable groupings
+
+- Made header guidelines less IETF-specific
+
+- Added new section on guidelines for extension statements
+
+- Added guidelines for nested "choice" statement within a "case" statement
+
 ** 03 ot 04
 
 - Added sections for deviation statements and performance considerations
