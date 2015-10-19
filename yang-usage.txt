@@ -232,10 +232,21 @@ interpretations of definitions in other modules.
 ** Definitions Section
 
 This section contains the module(s) defined by the specification.
-These modules MUST be written using the YANG syntax defined in ^I-D.ietf-netmod-rfc6020bis^.
+These modules SHOULD be written using the YANG syntax defined in ^I-D.ietf-netmod-rfc6020bis^. YANG 1.0 ^RFC6020^ MAY be used if no YANG 1.1 constructs
+or semantics are needed in the module.
+
 A YIN syntax version of the module MAY also be present in the document.
 There MAY also be other types of modules present in the document,
 such as SMIv2, which are not affected by these guidelines.
+
+Note that all YANG statements within a YANG module are considered
+normative, if the module itself is considered normative,
+and not an example module.  The use of keywords defined in ^RFC2119^
+apply to YANG description statements in normative modules 
+exactly as they would in any other normative section.
+
+Example YANG modules MUST NOT contain any normative text,
+including any reserved words from ^RFC2119^.
 
 See ^YangGuidelines^ for guidelines on YANG usage.
 
@@ -365,8 +376,8 @@ minimum conformance requirements are included here.
 
 ** Module Naming Conventions
 
-Modules contained in Standards Track documents
-SHOULD be named according to the guidelines in
+Normative modules contained in Standards Track documents
+MUST be named according to the guidelines in
 the IANA Considerations section of ^I-D.ietf-netmod-rfc6020bis^.
 
 A distinctive word or acronym (e.g., protocol name
@@ -382,9 +393,19 @@ uniqueness is guaranteed by IANA.  For unpublished
 modules, the authors need to check that no other
 work in progress is using the same module name.
 
+Example modules are non-normative, and SHOULD be named
+with the prefix "example-".
+
+It is suggested that a stable prefix be selected representing
+the entire organization.  All normative YANG modules published
+by the IETF MUST begin with the prefix "ietf-".
+Another standards organization, such as the IEEE, might use
+the prefix "ieee-" for all YANG modules.
+
 Once a module name is published, it MUST NOT be reused,
 even if the RFC containing the module is reclassified
-to 'Historic' status.
+to 'Historic' status.  A module name cannot be changed in YANG,
+and this would be treated as a a new module, not a name change.
 
 ** Prefixes
 
@@ -433,6 +454,10 @@ The following guidelines apply to prefix usage of the current (local) module:
 statements for an "identityref" or "instance-identifier" data type
 - The lcaol module prefix MAY be used for references to typedefs, groupings, extensions,
 features, and identities defined in the module.
+
+Prefix values SHOULD be short, but also likely to be unique.
+Prefix values SHOULD NOT conflict with known modules that have been
+previously published.
 
 ** Identifiers
 
@@ -1092,6 +1117,9 @@ YANG module indicated by an import
 statement), then the reference
 statement MUST be present.
 
+** Reusable Groupings
+
+
 ** Data Definitions
 
 The description statement MUST be present in the following
@@ -1728,6 +1756,20 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 
     -- RFC Ed.: remove this section before publication.  
 
+** 04 to 05
+
+- Clarified that YANG 1.1 SHOULD be used but YANG 1.0 MAY be used if no
+YANG 1.1 features needed
+
+- Changed SHOULD follow YANG naming conventions to MUST follow
+(for standards track documents only)
+
+- Clarified module naming conventions for normative modules,
+example modules, and modules from other SDOs.
+
+- Added prefix value selection guidelines
+
+- Added new section on guidelines for reusable groupings
 ** 03 ot 04
 
 - Added sections for deviation statements and performance considerations

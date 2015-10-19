@@ -179,15 +179,15 @@ specifications of each URI scheme.
     <organization />
 </author>
 
-<date month='July' day='5' year='2015' />
+<date month='September' day='23' year='2015' />
 
 <abstract><t>YANG is a data modeling language used to model configuration and state data manipulated by the Network Configuration Protocol (NETCONF), NETCONF remote procedure calls, and NETCONF notifications. This document obsoletes RFC 6020.</t></abstract>
 
 </front>
 
-<seriesInfo name='Internet-Draft' value='draft-ietf-netmod-rfc6020bis-06' />
+<seriesInfo name='Internet-Draft' value='draft-ietf-netmod-rfc6020bis-07' />
 <format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-netmod-rfc6020bis-06.txt' />
+        target='http://www.ietf.org/internet-drafts/draft-ietf-netmod-rfc6020bis-07.txt' />
 </reference>
 
   <reference anchor='RFC6241'>
