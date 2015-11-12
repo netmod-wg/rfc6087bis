@@ -452,7 +452,7 @@ The following guidelines apply to prefix usage of the current (local) module:
 - The local module prefix SHOULD be used instead of no prefix in all path expressions.
 - The local module prefix MUST be used instead of no prefix in all "default"
 statements for an "identityref" or "instance-identifier" data type
-- The lcaol module prefix MAY be used for references to typedefs, groupings, extensions,
+- The local module prefix MAY be used for references to typedefs, groupings, extensions,
 features, and identities defined in the module.
 
 Prefix values SHOULD be short, but also likely to be unique.
@@ -1545,7 +1545,7 @@ Careful consideration needs to be given to the location
 of operational state data.  It can either be located
 within the configuration subtree for which it applies,
 or it can be located outside the particular configuration subtree.
-Placing operation state within the configuration subtree
+Placing operational state within the configuration subtree
 is appropriate if the operational values can only exist
 if the configuration exists.
 
@@ -1650,7 +1650,7 @@ TODO: need more input on YANG 1.1 guidelines
 
 Standard modules SHOULD NOT import multiple revisions of the same module
 into a module.  This MAY be done if the authors can demonstrate that
-the "avoided" definitions from most recent of the multiple revisions are somehow
+the "avoided" definitions from the most recent of the multiple revisions are somehow
 broken or harmful to interoperability.
 
 *** Using Feature Logic
