@@ -1367,8 +1367,12 @@ The old client does not know about this type so it would
 never select this type, and therefore not be adding
 a mandatory data node.
 
-  module my-module {
-    ...
+  module example-module {
+    namespace "http://example.com/ns/example-module";
+    prefix mymod;
+
+    import iana-if-type { prefix iana; }
+    import ietf-interfaces { prefix if; }
 
     identity some-new-iftype {
        base iana:iana-interface-type;
@@ -1822,7 +1826,11 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 
     -- RFC Ed.: remove this section before publication.  
 
-** 04 to 05
+** v05 to v06
+
+- Changed example 'my-module' to 'example-module'
+
+** v04 to v05
 
 - Clarified that YANG 1.1 SHOULD be used but YANG 1.0 MAY be used if no
 YANG 1.1 features needed
@@ -1843,22 +1851,22 @@ example modules, and modules from other SDOs.
 
 - Added guidelines for nested "choice" statement within a "case" statement
 
-** 03 ot 04
+** v03 ot v04
 
 - Added sections for deviation statements and performance considerations
 - Added YANG 1.1 section
 - Updated YANG reference from 1.0 to 1.1
 
-** 02 to 03
+** v02 to v03
 
 - Updated draft based on github data tracker issues added
 by Benoit Clause (Issues 12 - 18)
 
-** 01 to 02
+** v01 to v02
 
 - Updated draft based on mailing list comments.
 
-** 00 to 01
+** v00 to v01
 
 All issues from the issue tracker have been addressed.
 
