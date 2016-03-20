@@ -105,10 +105,11 @@ the term 'submodule' is used instead.
 
 The following terms are used throughout this document:
 
-- published: A stable release of a module or submodule, usually contained in an RFC.
+- published: A stable release of a module or submodule,
+usually contained in an RFC.
 
-- unpublished: An unstable release of a module or submodule, usually contained in 
-an Internet-Draft.
+- unpublished: An unstable release of a module or submodule,
+usually contained in an Internet-Draft.
 
 * YANG Tree Diagrams @tree-diagrams@
 
@@ -162,20 +163,34 @@ the file name specified in Section 5.2 of ^I-D.ietf-netmod-rfc6020bis^.
 The following example is for the '2010-01-18' revision
 of the 'ietf-foo' module:
 
-  <CODE BEGINS> file "ietf-foo@2010-01-18.yang"
-    module ietf-foo {
+!! include-figure ietf-foo.yang  extract-to="ietf-foo@2016-03-20.yang"
+
+*** Example Modules
+
+Note that the <CODE BEGINS> convention MUST NOT be used for example modules
+or module fragments.  Instead the following convention is defined for
+complete example modules:
+
+  <EXAMPLE BEGINS> file "example-bar@2016-03-20.yang"
+    module example-bar {
       // ... 
-      revision 2010-01-18 {
-        description "Latest revision";
-        reference "RFC XXXX";
-      }
+      revision 2016-03-20;
+
+      // contains complete module example, intended to compile
       // ...
     }
-  <CODE ENDS>
+  <EXAMPLE ENDS>
+
+YANG module fragments MUST NOT use the <CODE BEGINS> or <EXAMPLE BEGINS>
+conventions, in order to make sure module extraction tools will
+ignore them:
 
 
-Note that this convention MUST NOT be used for example modules
-or module fragments.
+    leaf last-change-time {
+      type yang:date-and-time;
+      ...
+    }
+
 
 ** Terminology Section
 
@@ -798,7 +813,7 @@ the document containing the module or submodule is published.
 The module namespace URI value MUST NOT be changed,
 once the document containing the module is published.
 
-The revision-date substatement within the imports
+The revision-date substatement within the import
 statement SHOULD be present if any
 groupings are used from the external module.
 
@@ -931,7 +946,7 @@ in advance.  Data model designers need to consider how
 the functionality for a given protocol or protocol family
 will grow over time.
 
-The separation of configuration data and operational state SHOULD
+The separation of configuration data and operational data SHOULD
 be considered carefully. It is often useful to define separate
 top-level containers for configuration and non-configuration data.
 
@@ -1294,6 +1309,38 @@ For example, feature2 requires implementation of feature1:
      description "Another protocol feature";
    }
 
+** YANG Data Node Constraints
+
+*** Controlling Quantity
+
+The "min-elements" and "max-elements" statements can
+be use to control how many list or leaf-list instances are
+required for a particular data node.
+YANG constraint statements SHOULD be used to identify conditions
+that apply to all implementations of the data model.
+If platform-specific limitations (e.g., the "max-elements"
+supported for a particular list) are relevant to operations,
+then a data model definition statement (e.g., "max-ports" leaf)
+SHOULD be used to identify the limit.
+
+*** must vs. when
+
+The "must" and "when" YANG statements are used to provide
+cross-object referential tests.  They have very different behavior.
+The "when" statement causes data node instances to be silently deleted
+as soon as the condition becomes false.  A false "when" expression
+is not considered to be an error.
+
+The "when" statement SHOULD be used together with the "augment"
+or "uses" statements to achieve conditional model composition.
+The condition SHOULD be based on static properties of the
+augmented entry (e.g., list key leafs).
+
+The "must" statement causes a datastore validation error
+if the condition is false. This statement SHOULD be used
+for enforcing parameter value restrictions that involve
+more than one data node (e.g., end-time parameter
+must be after the start-time parameter).
 
 ** Augment Statements
 
@@ -1501,9 +1548,9 @@ the same data type as the original data structure.  This has the same
 semantics as setting the "require-instance" sub-statement to "false".
 
 It is sometimes useful to separate configuration and operational
-state, so that they do not not even share the exact same
+data, so that they do not not even share the exact same
 naming characteristics.  The correlation between configuration the
-operational state data that is affected by changes in configuration
+operational data that is affected by changes in configuration
 is a complex problem. There may not be a simple 1:1 relationship
 between a configuration data node and an operational data node.
 Further work is needed in YANG to clarify this relationship.
@@ -1513,21 +1560,22 @@ best practice is to clearly document any relationship
 to other data structures in the "description" statement.
 
 
-** Operational State
+** Operational Data
 
 In YANG, any data that has a "config" statement value of "false"
-could be considered operational state.  The relationship between
+could be considered operational data.  The relationship between
 configuration (i.e., "config" statement has a value of "true")
-and operational state can be complex.
+and operational data can be complex.
 
 One challenge for client developers is determining if
 the configured value is being used, which requires the
-developer to know which operational state parameters are
+developer to know which operational data parameters are
 associated with the particular configuration object
 (or group of objects).
 
-The simplest interaction between configuration and operational state
-is "none".  For example, the arbitrary administrative name or
+In the simplest use-cases , there is no interaction between
+configuration and operational data.
+For example, the arbitrary administrative name or
 sequence number assigned to an access control rule.  The configured
 value is always the value that is being used by the system.
 
@@ -1538,7 +1586,7 @@ Other parameters specify the desired state, but environmental
 and other factors can cause the actual state to be different.
 
 For example a "temperature" configuration setting only
-represents the desired temperature.  An operational state
+represents the desired temperature.  An operational data
 parameter is needed that reports the actual temperature
 in order to determine if the cooling system is operating
 correctly.  YANG has no mechanism other than the "description"
@@ -1546,19 +1594,19 @@ statement to associate the desired temperature and
 the actual temperature.
 
 Careful consideration needs to be given to the location
-of operational state data.  It can either be located
+of operational data.  It can either be located
 within the configuration subtree for which it applies,
 or it can be located outside the particular configuration subtree.
-Placing operational state within the configuration subtree
+Placing operational data within the configuration subtree
 is appropriate if the operational values can only exist
 if the configuration exists.
 
 The "interfaces" and "interfaces-state" subtrees defined in ^RFC7223^
 are an example of a complex relationship between configuration
-and operational state.  The operational values can include interface
+and operational data.  The operational values can include interface
 entries that have been discovered or initialized by the system.
 An interface may be in use that has not been configured at all.
-Therefore, the operational state for an interface cannot be located
+Therefore, the operational data for an interface cannot be located
 within the configuration for that same interface.
 
 Sometimes the configured value represents some sort of
@@ -1593,7 +1641,7 @@ for configured vs. learned entries.
 If all the data model properties are aligned between configuration
 and operational data, then it can be useful to define the
 configuration parameters within a grouping, and then replicate that
-grouping within the operational state portion of
+grouping within the operational data portion of
 the data model.
 
     grouping parms {
@@ -1610,7 +1658,7 @@ the data model.
     }
 
 Note that this mechanism can also be used if the configuration
-and operational state data are in separate sub-trees:
+and operational data are in separate sub-trees:
 
     container bar { // bar config can exist without bar-state
       config true;
@@ -1622,13 +1670,13 @@ and operational state data are in separate sub-trees:
       uses parms;
     }
 
-The need to replicate objects or define different operational state
+The need to replicate objects or define different operational data
 objects depends on the data model.  It is not possible to define
 one approach that will be optimal for all data models.
 Designers SHOULD describe the relationship in detail between
-configuration objects and any associated operational state objects.
+configuration objects and any associated operational data objects.
 The "description" statements for both the configuration and the
-operational state SHOULD be used for this purpose.
+operational data SHOULD be used for this purpose.
 
 ** Performance Considerations
 
@@ -1643,12 +1691,14 @@ or "choice" statements
 - "must" statement is generally more expensive than "min-entries",
 "max-entries", "mandatory", or "unique" statements
 - "identityref" leafs are generally more expensive than "enumeration" leafs
-- "leafref" and "instance-identifier" types with "requite-instance" set to true
+- "leafref" and "instance-identifier" types with "require-instance" set to true
 are generally more expensive than if "require-instance" is set to false
 
 ** YANG 1.1 Guidelines
 
-TODO: need more input on YANG 1.1 guidelines
+The set of YANG 1.1 guidelines will grow as operational experience is gained
+with the new language features. This section contains an initial set
+of guidelines.
 
 *** Importing Multiple Revisions
 
@@ -1664,14 +1714,81 @@ A "description" statement SHOULD describe the "if-feature" logic in text,
 to help readers understand the module.
 
 YANG features SHOULD be used instead of the "when" statement, if possible.
-This reduces server implementation complexity and might reduce runtime resource
-requirements as well.
+Features are advertised by the server and objects conditional by if-feature are
+conceptually grouped together.  There is no such commonality
+supported for "when" statements.
+
+Features generally require less server implementation complexity
+and runtime resources than objects that use "when" statements.
+Features are generally static (i.e., set when module is loaded and not changed
+at runtime). However every client edit might cause a "when"
+statement result to change.
+
 
 *** anyxml vs. anydata
 
 The "anyxml" statement MUST NOT be used to represent a conceptual subtree
 of YANG data nodes.  The "anydata" statement MUST be used for this purpose.
 
+*** action vs. rpc
+
+The use of "action" statements or "rpc" statements is a subjective
+design decision.  RPC operations are not associated with any particular
+data node. Actions are associated with a specific data node definition.
+An "action" statement SHOULD be used if the protocol operation
+is specific to a subset of all data nodes instead of all possible data nodes.
+
+The same action name MAY be used in different definitions within different data node.
+For example, a "reset" action defined with a data node definition
+for an interface might have different parameters than for a power supply
+or a VLAN. The same action name SHOULD be used to represent similar semantics.
+
+The NETCONF Access Control Model (NACM) ^RFC6536^ does not support
+parameter access control for RPC operations.  The user is given
+permission (or not) to invoke the RPC operation with any parameters.
+For example, if each client is only allowed to reset their own interface,
+then NACM cannot be used.
+
+For example, NACM cannot enforce access access control based on the value
+of the "interface" parameter, only the "reset" operation itself:
+
+   rpc reset {
+     input {
+       leaf interface {
+         type if:interface-ref;
+         mandatory true;
+         description "The interface to reset.";
+       }
+     }
+   }
+
+However, NACM can enforce access access control for individual interface
+instances, using a "reset" action, If the user does not have read access
+to the specific "interface" instance, then it cannot invoke the "reset"
+action for that interface instance:
+
+   container interfaces {
+     list interface {
+       ...
+       action reset { }
+     }
+   }
+
+
+** Updating YANG Modules (Published vs. Unpublished)
+
+YANG modules can change over time. Typically, new data model definitions
+are needed to support new features.
+YANG update rules defined in section 11 of ^I-D.ietf-netmod-rfc6020bis^
+MUST be followed for published modules. They MAY be followed for
+unpublished modules.
+
+The YANG update rules only apply to published module revisions.
+Each organization will have their own way to identity published
+work which is considered to be stable, and unpublished work
+which is considered to be unstable.  For example, in the IETF,
+the RFC document is used for published work, and the Internet-Draft
+is used for unpublished work.
 
 * IANA Considerations @IANA@
 
@@ -1819,6 +1936,9 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 - Added Identifier Naming Conventions
 - Clarified use of mandatory nodes with conditional augmentations
 - Clarified namespace and domain conventions for example modules
+- Added <EXAMPLE BEGINS> and <EXAMPLE ENDS> convention
+- Added YANG 1.1 guidelines
+- Added Data Model Constraints section
 
 *! start-appendix
 
@@ -1829,6 +1949,14 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 ** v05 to v06
 
 - Changed example 'my-module' to 'example-module'
+- Added section Updating YANG Modules (Published vs. Unpublished)
+- Added Example Modules section
+- Added "<EXAMPLE BEGINS>" convention for full example modules
+- Added section on using action vs. rpc
+- Changed term "operational state" to "operational data"
+- Added section on YANG Data Node Constraints
+- Added guidelines on using must vs. when statements
+- Made ietf-foo module validate for I-D submission
 
 ** v04 to v05
 
@@ -2002,98 +2130,7 @@ A list of freely available tools and other information can be found at:
 
 *  YANG Module Template @YANGMOD@
 
- <CODE BEGINS> file "ietf-template@2010-05-18.yang"
-
-   module ietf-template {
-
-     // replace this string with a unique namespace URN value
-     namespace 
-       "urn:ietf:params:xml:ns:yang:ietf-template";
-
-     // replace this string, and try to pick a unique prefix
-     prefix "temp";
-
-
-     // import statements here: e.g., 
-     // import ietf-yang-types { prefix yang; }
-     // import ietf-inet-types { prefix inet; }
-
-     // identify the IETF working group if applicable
-     organization
-        "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
-
-     // update this contact statement with your info
-     contact
-        "WG Web:   <http://tools.ietf.org/wg/your-wg-name/>
-         WG List:  <mailto:your-wg-name@ietf.org>
-
-         WG Chair: your-WG-chair
-                   <mailto:your-WG-chair@example.com>
-
-         Editor:   your-name
-                   <mailto:your-email@example.com>";
-
-
-     // replace the first sentence in this description statement.
-     // replace the copyright notice with the most recent
-     // version, if it has been updated since the publication
-     // of this document
-     description
-      "This module defines a template for other YANG modules.
-
-       Copyright (c) <insert year> IETF Trust and the persons 
-       identified as authors of the code.  All rights reserved.
-
-       Redistribution and use in source and binary forms, with or
-       without modification, is permitted pursuant to, and subject
-       to the license terms contained in, the Simplified BSD License
-       set forth in Section 4.c of the IETF Trust's Legal Provisions
-       Relating to IETF Documents
-       (http://trustee.ietf.org/license-info).
-
-       This version of this YANG module is part of RFC XXXX; see
-       the RFC itself for full legal notices.";
-
-     // RFC Ed.: replace XXXX with actual RFC number and remove
-     // this note
-
-     reference "RFC XXXX";
-
-     // RFC Ed.: remove this note
-     // Note: extracted from RFC XXXX
-
-
-     // replace '2010-05-18' with the module publication date
-     // The format is (year-month-day)
-     revision "2010-05-18" {
-       description
-         "Initial version";
-     }
-
-     // extension statements
-
-     // feature statements
-
-     // identity statements
-
-     // typedef statements
-
-     // grouping statements
-
-     // data definition statements
-
-     // augment statements
-
-     // rpc statements
-
-     // notification statements
-
-     // DO NOT put deviation statements in a published module
-
-   }
-
- <CODE ENDS>
-
+!! include-figure ietf-template.yang extract-to="ietf-template@2016-03-20.yang"
 
 {{document:
     name ;
