@@ -146,6 +146,17 @@ containing a module:
 - IANA Considerations section
 - References section
 
+There are three usage scenarios for YANG that can appear in
+an Internet-Draft or RFC:
+
+- normative module or submodule
+- example module or submodule
+- example YANG fragment not part of any module or submodule
+
+The guidelines in this document refer mainly to a normative
+complete module or submodule, but may be applicable to
+example modules and YANG fragments as well.
+
 ** Module Copyright @MODULECOPY@
 
 The module description statement MUST contain a reference to
@@ -167,30 +178,27 @@ of the 'ietf-foo' module:
 
 *** Example Modules
 
-Note that the <CODE BEGINS> convention MUST NOT be used for example modules
-or module fragments.  Instead the following convention is defined for
-complete example modules:
+The <CODE BEGINS> convention SHOULD NOT be used for example modules
+or YANG fragments, in order to make sure module extraction tools will
+ignore them.
 
-  <EXAMPLE BEGINS> file "example-bar@2016-03-20.yang"
-    module example-bar {
-      // ... 
-      revision 2016-03-20;
-
-      // contains complete module example, intended to compile
-      // ...
-    }
-  <EXAMPLE ENDS>
-
-YANG module fragments MUST NOT use the <CODE BEGINS> or <EXAMPLE BEGINS>
-conventions, in order to make sure module extraction tools will
-ignore them:
+An example module SHOULD be named using the term "example",
+followed by a hyphen, followed by a descriptive name,
+e.g., "example-toaster".
 
 
-    leaf last-change-time {
-      type yang:date-and-time;
-      ...
-    }
-
+# Instead the following convention is defined for
+# complete example modules:
+#
+#  <EXAMPLE BEGINS> file "example-bar@2016-03-20.yang"
+#    module example-bar {
+#      // ...
+#      revision 2016-03-20;
+#
+#      // contains complete module example, intended to compile
+#      // ...
+#    }
+#  <EXAMPLE ENDS>
 
 ** Terminology Section
 
@@ -826,6 +834,18 @@ main module MUST be updated so that the main module
 revision date is equal or more recent than the revision date
 of any submodule that is (directly or indirectly) included by the main module.
 
+Definitions for future use SHOULD NOT be specified in a module.
+Do not specify placeholder objects like the "reserved" example below:
+
+    leaf reserved {
+      type string;
+      description
+        "This object has no purpose at this time, but a future
+         revision of this module might define a purpose
+         for this object.";
+      }
+    }
+
 ** Module Header, Meta, and Revision Statements
 
 For published modules, the namespace MUST 
@@ -848,8 +868,9 @@ MUST be present, and the main document author or
 editor contact information SHOULD be present.
 If additional authors or editors exist,
 their contact information MAY be present.
-In addition, the Area Director and other contact
-information MAY be present.
+
+#In addition, the Area Director and other contact
+#information MAY be present.
 
 The description statement MUST be present.
 For modules published within IETF documents,
@@ -1106,6 +1127,63 @@ statement) SHOULD be present.
         "The foo enum...  ";
     }
 
+*** Union Types
+
+The YANG "union" type is evaluated by testing a value
+against each member type in the union.  The first type definition
+that accepts a value as valid is the member type used.
+In general, member types SHOULD be ordered from most restrictive
+to least restrictive types.
+
+In the following example, the "enumeration" type will never
+be matched because the preceding "string" type will match everything.
+
+Incorrect:
+
+   type union {
+     type string;
+     type enumeration {
+       enum up;
+       enum down;
+     }
+   }
+
+Correct:
+
+   type union {
+     type enumeration {
+       enum up;
+       enum down;
+     }
+     type string;
+   }
+
+It is possible for different member types to match,
+depending on the input encoding format.  In XML, all values
+are passed as string nodes, but in JSON there are different
+value types for numbers, booleans, and strings.
+
+In the following example, a JSON numeric value will always
+be matched by the "int32" type but in XML the string value
+representing a number will be matched by the "string" type.
+The second version will match the "int32" member type
+no matter how the input is encoded.
+
+
+Incorrect:
+
+   type union {
+     type string;
+     type int32;
+   }
+
+Correct:
+
+   type union {
+     type int32;
+     type string;
+   }
+
 ** Reusable Type Definitions
 
 If an appropriate derived type exists in any
@@ -1223,6 +1301,50 @@ as additional "case" statements within the parent "choice" statement.
 Note that the "mandatory" and "default" statements within
 a nested "choice" statement only apply if the "case" containing
 the nested "choice" statement is first selected.
+
+*** Non-Presence Containers
+
+A non-presence container is used to organize data into specific subtrees.
+It is not intended to have semantics within the data model beyond this
+purpose, although YANG allows it (e.g., "must" statement within the
+non-presence container).
+
+Example using container wrappers:
+
+    container top {
+       container foos {
+          list foo { ... }
+       }
+       container bars {
+          list bar { ... }
+       }
+    }
+
+
+Example without container wrappers:
+
+    container top {
+       list foo { ... }
+       list bar { ... }
+    }
+
+
+Use of non-presence containers to organize data is a subjective matter
+similar to use of sub-directories in a file system.
+The NETCONF and RESTCONF protocols do not currently support the ability
+to delete all list (or leaf-list) entries at once. This deficiency
+is sometimes avoided by use of a parent container (i.e., deleting the
+container also removes all child entries).
+
+*** Top-Level Data Nodes
+Use of top-level objects needs to be considered carefully
+
+-top-level siblings are not ordered
+-top-level siblings not are not static, and depends on the modules
+that are loaded
+- for sub-tree filtering, retrieval of a top-level leaf-list
+will be treated as a content-match node for all top-level-siblings
+- a top-level list with many instances may impact performance
 
 ** Operation Definitions
 
@@ -1459,11 +1581,17 @@ all platforms.
 There are several reasons that deviations might be needed in
 an implementation, e.g., an object cannot be supported
 on all platforms, or feature delivery is done
-in multiple development phases.
+in multiple development phases.  Deviation statements can
+also be used to add annotations to a module, which does not
+affect the conformance requirements for the module.
 
 It is suggested that deviation statements be defined in separate
 modules from regular YANG definitions.  This allows the deviations to be
 platform-specific and/or temporary.
+
+The order that deviation statements are evaluated can affect the
+result.  Therefore multiple deviation statements in the same module,
+for the same target object, SHOULD NOT be used.
 
 The "max-elements" statement is intended to describe an architectural
 limit to the number of list entries.  It is not intended to
@@ -1693,6 +1821,14 @@ or "choice" statements
 - "identityref" leafs are generally more expensive than "enumeration" leafs
 - "leafref" and "instance-identifier" types with "require-instance" set to true
 are generally more expensive than if "require-instance" is set to false
+
+** Open Systems Considerations
+
+A YANG module MUST NOT be designed such that the set of modules
+found on a server implementation can be predetermined in advance.
+Only the modules imported by a particular module can be assumed
+to be present in an implementation.
+An open system MAY include any combination of YANG modules.
 
 ** YANG 1.1 Guidelines
 
@@ -1945,6 +2081,17 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 * Change Log
 
     -- RFC Ed.: remove this section before publication.  
+
+** v06 to v07
+
+- update contact statement guideline
+- update example modules guidelines
+- add guidelines on top-level data nodes
+- add guideline on use of NP containers
+- added guidelines on union types
+- add guideline on deviations
+- added section on open systems considerations
+- added guideline about definitions reserved for future use
 
 ** v05 to v06
 
