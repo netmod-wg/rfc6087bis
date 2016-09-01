@@ -307,7 +307,7 @@ This section MUST be patterned after the latest approved
 template (available at
 http://trac.tools.ietf.org/area/ops/trac/wiki/yang-security-guidelines).
 ^sec-template^ contains the security considerations template dated 
-2013-05-08.  Authors MUST check the webpage at the URL listed above 
+2013-05-08.  Authors MUST check the WEB page at the URL listed above
 in case there is a more recent version available.
 
 In particular:
@@ -919,16 +919,14 @@ and operators to know how to find the
 original source document in a consistent manner.
 The revision statement MAY have a description substatement.
 
-Each new revision MUST include a revision date that
-is higher than any other revision date in the module.
-The revision date does not need to be updated if the
-module contents do not change in the new document revision.
-
-It is acceptable to reuse the
-same revision statement within unpublished versions
-(i.e., Internet-Drafts), but the revision date
-MUST be updated to a higher value each time the
-Internet-Draft is re-posted.
+It is not required to keep the full revision history of draft versions
+(e.g., modules contained within Internet-Drafts).
+That is, within a sequence of draft versions, only the most recent
+revision need be recorded in the module.
+However, whenever a new (i.e. changed) version is made available
+(e.g., via a new version of an Internet-Draft),
+the revision date of that new version MUST be updated to a date
+later than that of the previous version.
 
 ** Namespace Assignments @TEMPNS@
 
@@ -1213,7 +1211,7 @@ Correct:
 
 *** Empty and Boolean
 
-YANG provides an "empty" data type, which has 1 value (i.e., present).
+YANG provides an "empty" data type, which has one value (i.e., present).
 The default is "not present", which is not actually a value.
 When used within a list key, only one value can (and must) exist
 for this key leaf.  The type "empty" SHOULD NOT be used
@@ -2239,9 +2237,13 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 
 ** v07 to v08
 
-- change CODE BEGINS guideline for example modules
-- update tree diagram guidelines
+- changed CODE BEGINS guideline for example modules
+- updated tree diagram guidelines
 - clarified published and unpublished terms
+- added section on Empty and Boolean data types
+- clarified how to update the revision statement
+- updated operational state guidelines
+- added 'YANG fragment' to terminology section
 
 ** v06 to v07
 
