@@ -113,8 +113,13 @@ section 2.1 of ^RFC2026^ is considered a stable publication.
 For example the "Internet-Draft" described in
 section 2.2 of ^RFC2026^ is considered an unstable publication
 that is a work-in-progess, subject to change at any time.
-2
 
+- YANG fragment: A set of YANG statements that are not intended
+to represent a complete YANG module or submodule.  These statements
+are not intended for actual use, except to provide an example
+of YANG statement usage.  The invalid syntax "..." is sometimes
+used to indicate that additional YANG statements would be
+present in a real YANG module.
 
 * YANG Tree Diagrams @tree-diagrams@
 
@@ -987,8 +992,11 @@ the functionality for a given protocol or protocol family
 will grow over time.
 
 The separation of configuration data and operational data SHOULD
-be considered carefully. It is often useful to define separate
+be considered carefully. It is sometimes useful to define separate
 top-level containers for configuration and non-configuration data.
+For some existing top-level data nodes, configuration data
+was not in scope, so only one container representing operational
+data was created.
 
 The number of top-level data nodes within a module
 SHOULD be minimized. It is often useful to retrieve
@@ -1202,6 +1210,52 @@ Correct:
      type int32;
      type string;
    }
+
+*** Empty and Boolean
+
+YANG provides an "empty" data type, which has 1 value (i.e., present).
+The default is "not present", which is not actually a value.
+When used within a list key, only one value can (and must) exist
+for this key leaf.  The type "empty" SHOULD NOT be used
+for a key leaf since it is pointless.
+
+There is really no difference between a leaf of type "empty" and a leaf-list
+of type "empty". Both are limited to one instance.
+The type "empty" SHOULD NOT be used for a leaf-list.
+
+The advantage of using type "empty" instead of type "boolean"
+is that the default (not present) does not take up any bytes
+in a representation.  The disadvantage is that the client
+may not be sure if an empty leaf is missing because it
+was filtered somehow or not implemented. The client may not have
+a complete and accurate schema for the data returned by the server,
+and not be aware of the missing leaf.
+
+The YANG "boolean" data type provides two values ("true" and "false").
+When used within a list key, two entries can exist
+for this key leaf.  Default values are ignored for key leafs,
+but a default statement is often used for plain boolean leafs.
+The advantage of the "boolean" type is that the leaf or leaf-list
+has a clear representation for both values.  The default value
+is usually not returned unless explicitly requested by the client,
+so no bytes are used in a typical representation.
+
+In general, the "boolean" data type SHOULD be used instead
+of the "empty" data type, as shown in the example below:
+
+Incorrect:
+
+   leaf flag1 {
+     type empty;
+   }
+
+Correct:
+
+   leaf flag2 {
+     type boolean;
+     default false;
+   }
+
 
 ** Reusable Type Definitions
 
@@ -1717,10 +1771,92 @@ and operational data can be complex.
 One challenge for client developers is determining if
 the configured value is being used, which requires the
 developer to know which operational data parameters are
-associated with the particular configuration object
-(or group of objects).
+associated with the particular configuration object(s).
 
-In the simplest use-cases , there is no interaction between
+If possible, operational data SHOULD be combined with
+its associated configuration data.  This prevents
+duplication of key leafs and ancestor nodes.
+It also prevents race conditions for retrieval of
+dynamic entries, and allows configuration and operational
+data to be retrieved together with minimal message overhead.
+
+Not preferred:
+
+   list foo {
+     ...
+   }
+
+   list foo-state {
+     config false;
+     ...
+   }
+
+Preferred:
+
+   list foo {
+     container foo-state {
+       config false;
+       ...
+     }
+   }
+
+If it is not possible to combine configuration and operational
+data, then the keys used to represent list entries SHOULD
+be the same type. The "leafref" data type SHOULD be used in
+operational data for key leafs that have corresponding
+configuration instances. The "require-instance" statement
+MAY be set to "false" (in YANG 1.1 modules only)
+to indicate instances are allowed in the operational state
+that do not exist in the associated configuration data.
+
+The following example shows the use of the "leafref" data type:
+
+
+Not preferred:
+
+
+   list foo {
+      key name;
+      leaf name {
+        type string;
+      }
+      ...
+   }
+
+   list foo-state {
+      key name;
+      config false;
+      leaf name {
+        type string;
+      }
+      ...
+   }
+
+Preferred:
+
+
+   list foo {
+      key name;
+      leaf name {
+        type string;
+      }
+      ...
+   }
+
+   list foo-state {
+      key name;
+      config false;
+      leaf name {
+        type leafref {
+          path "/foo/name";
+          require-instance false;
+        }
+      }
+      ...
+   }
+
+
+In the simplest use-cases, there is no interaction between
 configuration and operational data.
 For example, the arbitrary administrative name or
 sequence number assigned to an access control rule.  The configured
