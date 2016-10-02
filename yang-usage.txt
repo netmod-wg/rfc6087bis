@@ -817,7 +817,7 @@ to "one" or "three":
      }
 
 In the next revision of the module, leaf "foo1" is extended
-with a nem enum named "four":
+with a new enum named "four":
 
      leaf foo1 {
        type enumeration {
@@ -2073,7 +2073,7 @@ MUST be followed for published modules. They MAY be followed for
 unpublished modules.
 
 The YANG update rules only apply to published module revisions.
-Each organization will have their own way to identity published
+Each organization will have their own way to identify published
 work which is considered to be stable, and unpublished work
 which is considered to be unstable.  For example, in the IETF,
 the RFC document is used for published work, and the Internet-Draft
