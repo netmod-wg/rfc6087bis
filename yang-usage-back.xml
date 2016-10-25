@@ -17,38 +17,6 @@
   </reference>
   <!-- end 2119 -->
 
-<reference anchor='RFC2223'>
-<front>
-<title>Instructions to RFC Authors</title>
-<author initials='J.' surname='Postel' fullname='Jon Postel'>
-<organization>USC/Information Sciences Institute</organization>
-<address>
-<postal>
-<street>4676 Admiralty Way</street>
-<street>Marina del Rey</street>
-<street>CA  90292</street></postal>
-<phone>+1 310-822-1511</phone>
-<facsimile>+1 310-823-6714</facsimile>
-<email>Postel@ISI.EDU</email></address></author>
-<author initials='J.K.' surname='Reynolds' fullname='Joyce K. Reynolds'>
-<organization>USC/Information Sciences Institute</organization>
-<address>
-<postal>
-<street>4676 Admiralty Way</street>
-<street>Marina del Rey</street>
-<street>CA  90292</street></postal>
-<phone>+1 310-822-1511</phone>
-<facsimile>+1 310-823-6714</facsimile>
-<email>jkrey@isi.edu</email></address></author>
-<date year='1997' month='October' />
-<area>General</area>
-<keyword>RFC authors</keyword></front>
-<seriesInfo name='RFC' value='2223' />
-<format type='TXT' octets='37948' target='http://www.rfc-editor.org/rfc/rfc2223.txt' />
-<format type='XML' octets='37561' target='http://xml.resource.org/public/rfc/xml/rfc2223.xml' />
-</reference>
-  <!-- end 2223 -->
-
 
 <reference anchor='RFC3688'>
 <front>
@@ -152,23 +120,6 @@ specifications of each URI scheme.
 </reference>
   <!-- end 5378 -->
 
-<reference anchor='RFC5741'>
-
-<front>
-<title>RFC Streams, Headers, and Boilerplates</title>
-<author initials='L.' surname='Daigle' fullname='L. Daigle'>
-<organization /></author>
-<author initials='O.' surname='Kolkman' fullname='O. Kolkman'>
-<organization /></author>
-<author>
-<organization>IAB</organization></author>
-<date year='2009' month='December' />
-<abstract>
-<t>RFC documents contain a number of fixed elements such as the title page header, standard boilerplates, and copyright/IPR statements.  This document describes them and introduces some updates to reflect current usage and requirements of RFC publication.  In particular, this updated structure is intended to communicate clearly the source of RFC creation and review.  This document is not an Internet Standards Track specification; it is published for informational purposes.</t></abstract></front>
-<seriesInfo name='RFC' value='5741' />
-<format type='TXT' octets='32160' target='http://www.rfc-editor.org/rfc/rfc5741.txt' />
-</reference>
-  <!-- end 5741 -->
 
 
   <reference anchor="RFC6020">
@@ -187,45 +138,24 @@ specifications of each URI scheme.
   </reference>
 
 
-<reference anchor='I-D.ietf-netmod-rfc6020bis'>
+  <reference anchor="RFC7950" target="http://www.rfc-editor.org/info/rfc7950">
 <front>
-<title>YANG - A Data Modeling Language for the Network Configuration Protocol (NETCONF)</title>
-
-<author initials='M' surname='Bjorklund' fullname='Martin Bjorklund'>
-    <organization />
+<title>The YANG 1.1 Data Modeling Language</title>
+<author initials="M." surname="Bjorklund" fullname="M. Bjorklund" role="editor">
+<organization/>
 </author>
-
-<date month='September' day='23' year='2015' />
-
-<abstract><t>YANG is a data modeling language used to model configuration and state data manipulated by the Network Configuration Protocol (NETCONF), NETCONF remote procedure calls, and NETCONF notifications. This document obsoletes RFC 6020.</t></abstract>
-
+<date year="2016" month="August"/>
+<abstract>
+<t>
+YANG is a data modeling language used to model configuration data, state data, Remote Procedure Calls, and notifications for network management protocols. This document describes the syntax and semantics of version 1.1 of the YANG language. YANG version 1.1 is a maintenance release of the YANG language, addressing ambiguities and defects in the original specification. There are a small number of backward incompatibilities from YANG version 1. This document also specifies the YANG mappings to the Network Configuration Protocol (NETCONF).
+</t>
+</abstract>
 </front>
-
-<seriesInfo name='Internet-Draft' value='draft-ietf-netmod-rfc6020bis-07' />
-<format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-netmod-rfc6020bis-07.txt' />
-</reference>
-
-  <reference anchor='RFC6241'>
-      <front>
-	<title>Network Configuration Protocol (NETCONF)</title>
-	<author initials='R.' surname='Enns' fullname='R. Enns' role="editor">
-	  <organization/>
-	</author>
-	<author initials='M.' surname='Bjorklund' fullname='M. Bjorklund' role="editor">
-	  <organization/>
-	</author>
-	<author initials='J.' surname='Schoenwaelder' fullname='J. Schoenwaelder' role="editor">
-	  <organization/>
-	</author>
-	<author initials='A.' surname='Bierman' fullname='A. Bierman' role="editor">
-	  <organization/>
-	</author>
-	<date year='2011' month='June'/>
-      </front>
-      <seriesInfo name='RFC' value='6241'/>
+<seriesInfo name="RFC" value="7950"/>
+<seriesInfo name="DOI" value="10.17487/RFC7950"/>
   </reference>
-  <!-- end 6241 -->
+
+
 
 <reference anchor='RFC6991'>
 <front>
@@ -239,6 +169,9 @@ specifications of each URI scheme.
 <format type='TXT' octets='60242' target='http://www.rfc-editor.org/rfc/rfc6991.txt' />
 </reference>
   <!-- end 6991 -->
+
+
+
 
 <reference anchor="W3C.REC-xpath-19991116" target="http://www.w3.org/TR/1999/REC-xpath-19991116">
       <front>
@@ -321,6 +254,46 @@ This memo documents the process used by the Internet community for the standardi
 </reference>
   <!-- end 6087 -->
 
+
+  <reference anchor='RFC6241'>
+      <front>
+	<title>Network Configuration Protocol (NETCONF)</title>
+	<author initials='R.' surname='Enns' fullname='R. Enns' role="editor">
+	  <organization/>
+	</author>
+	<author initials='M.' surname='Bjorklund' fullname='M. Bjorklund' role="editor">
+	  <organization/>
+	</author>
+	<author initials='J.' surname='Schoenwaelder' fullname='J. Schoenwaelder' role="editor">
+	  <organization/>
+	</author>
+	<author initials='A.' surname='Bierman' fullname='A. Bierman' role="editor">
+	  <organization/>
+	</author>
+	<date year='2011' month='June'/>
+      </front>
+      <seriesInfo name='RFC' value='6241'/>
+  </reference>
+  <!-- end 6241 -->
+
+  <reference anchor="RFC6242" target="http://www.rfc-editor.org/info/rfc6242">
+<front>
+<title>Using the NETCONF Protocol over Secure Shell (SSH)</title>
+<author initials="M." surname="Wasserman" fullname="M. Wasserman">
+<organization/>
+</author>
+<date year="2011" month="June"/>
+<abstract>
+<t>
+This document describes a method for invoking and running the Network Configuration Protocol (NETCONF) within a Secure Shell (SSH) session as an SSH subsystem. This document obsoletes RFC 4742. [STANDARDS-TRACK]
+</t>
+</abstract>
+</front>
+<seriesInfo name="RFC" value="6242"/>
+<seriesInfo name="DOI" value="10.17487/RFC6242"/>
+</reference>
+
+
 <reference anchor="RFC7223">
 <front>
 <title>A YANG Data Model for Interface Management</title>
@@ -371,6 +344,72 @@ This document defines a YANG data model for the management of network interfaces
 
 <seriesInfo name='RFC' value='6536' />
 <format type='TXT' octets='90803' target='http://www.rfc-editor.org/rfc/rfc6536.txt' />
+</reference>
+
+<reference anchor="RFC7322" target="http://www.rfc-editor.org/info/rfc7322">
+<front>
+<title>RFC Style Guide</title>
+<author initials="H." surname="Flanagan" fullname="H. Flanagan">
+<organization/>
+</author>
+<author initials="S." surname="Ginoza" fullname="S. Ginoza">
+<organization/>
+</author>
+<date year="2014" month="September"/>
+<abstract>
+<t>
+This document describes the fundamental and unique style conventions and editorial policies currently in use for the RFC Series. It captures the RFC Editor's basic requirements and offers guidance regarding the style and structure of an RFC. Additional guidance is captured on a website that reflects the experimental nature of that guidance and prepares it for future inclusion in the RFC Style Guide. This document obsoletes RFC 2223, "Instructions to RFC Authors".
+</t>
+</abstract>
+</front>
+<seriesInfo name="RFC" value="7322"/>
+<seriesInfo name="DOI" value="10.17487/RFC7322"/>
+</reference>
+
+<reference anchor="RFC7841" target="http://www.rfc-editor.org/info/rfc7841">
+<front>
+<title>RFC Streams, Headers, and Boilerplates</title>
+<author initials="J." surname="Halpern" fullname="J. Halpern" role="editor">
+<organization/>
+</author>
+<author initials="L." surname="Daigle" fullname="L. Daigle" role="editor">
+<organization/>
+</author>
+<author initials="O." surname="Kolkman" fullname="O. Kolkman" role="editor">
+<organization/>
+</author>
+<date year="2016" month="May"/>
+<abstract>
+<t>
+RFC documents contain a number of fixed elements such as the title page header, standard boilerplates, and copyright/IPR statements. This document describes them and introduces some updates to reflect current usage and requirements of RFC publication. In particular, this updated structure is intended to communicate clearly the source of RFC creation and review. This document obsoletes RFC 5741, moving detailed content to an IAB web page and preparing for more flexible output formats.
+</t>
+</abstract>
+</front>
+<seriesInfo name="RFC" value="7841"/>
+<seriesInfo name="DOI" value="10.17487/RFC7841"/>
+</reference>
+
+<reference anchor="I-D.ietf-netconf-restconf">
+<front>
+<title>RESTCONF Protocol</title>
+<author initials="A" surname="Bierman" fullname="Andy Bierman">
+<organization/>
+</author>
+<author initials="M" surname="Bjorklund" fullname="Martin Bjorklund">
+<organization/>
+</author>
+<author initials="K" surname="Watsen" fullname="Kent Watsen">
+<organization/>
+</author>
+<date month="September" day="28" year="2016"/>
+<abstract>
+<t>
+This document describes an HTTP-based protocol that provides a programmatic interface for accessing data defined in YANG, using the datastore concepts defined in NETCONF.
+</t>
+</abstract>
+</front>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netconf-restconf-17"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netconf-restconf-17.txt"/>
 </reference>
 
 </references>
