@@ -182,7 +182,8 @@ which is available online at:
 
 ** Code Components
 
-Each YANG module or submodule contained within an Internet-Draft or RFC
+Each normative YANG module or submodule contained within
+an Internet-Draft or RFC
 is considered to be a code component.  The strings "<CODE BEGINS>"
 and "<CODE ENDS>" MUST be used to identify each code component.
 
@@ -195,27 +196,12 @@ of the 'ietf-foo' module:
 
 *** Example Modules
 
-The <CODE BEGINS> convention SHOULD be used for complete example modules,
-but not YANG fragments.  This allows module extraction tools to
-ignore partial YANG modules that are not intended to be compiled.
+Example modules are not code components.
+The <CODE BEGINS> convention MUST NOT be used for example modules.
 
 An example module SHOULD be named using the term "example",
 followed by a hyphen, followed by a descriptive name,
 e.g., "example-toaster".
-
-
-# Instead the following convention is defined for
-# complete example modules:
-#
-#  <EXAMPLE BEGINS> file "example-bar@2016-03-20.yang"
-#    module example-bar {
-#      // ...
-#      revision 2016-03-20;
-#
-#      // contains complete module example, intended to compile
-#      // ...
-#    }
-#  <EXAMPLE ENDS>
 
 ** Terminology Section
 
@@ -286,8 +272,8 @@ interpretations of definitions in other modules.
 ** Definitions Section
 
 This section contains the module(s) defined by the specification.
-These modules SHOULD be written using the YANG syntax defined in ^RFC7950^.
-YANG 1.0 ^RFC6020^ MAY be used if no YANG 1.1 constructs
+These modules SHOULD be written using the YANG 1.1 ^RFC7950^ syntax.
+YANG 1.0 ^RFC6020^ syntax MAY be used if no YANG 1.1 constructs
 or semantics are needed in the module.
 
 A YIN syntax version of the module MAY also be present in the document.
@@ -397,8 +383,13 @@ freely available from github:
 
    https://github.com/mbj4668/pyang
 
-If the 'pyang' compiler is used, then the "--ietf" command line
-option SHOULD be used to identify any IETF guideline issues.
+If the 'pyang' compiler is used to validate a normative module,
+then the "--ietf" command line
+option MUST be used to identify any IETF guideline issues.
+
+If the 'pyang' compiler is used to validate an example module,
+then the "--ietf" command line
+option MAY be used to identify any IETF guideline issues.
 
 ** Module Extraction Tools
 
@@ -414,7 +405,7 @@ extracted correctly.
 
 * YANG Usage Guidelines @YangGuidelines@
 
-In general, modules in IETF Standards Track specifications MUST
+Modules in IETF Standards Track specifications MUST
 comply with all syntactic and semantic requirements of YANG ^RFC7950^.
 The guidelines in this section are intended
 to supplement the YANG specification, which is
@@ -983,13 +974,22 @@ statement values for Standards Track modules:
 Note that a different URN prefix string SHOULD be used for non-Standards-Track
 modules. The string SHOULD be selected according to the guidelines in ^RFC7950^.
 
-The following examples are for non-Standards-Track modules.
-The domain "example.com" SHOULD be used in all namespace URIs
-for example modules.
+The following URIs exemplify what might be used by non Standards
+Track modules.  Note that the domain "example.com" SHOULD be used
+by example modules in IETF drafts.
+
+Example URIs using URLs per RFC 3986 ^RFC3986^:
 
     http://example.com/ns/example-interfaces
 
     http://example.com/ns/example-system
+
+Example URIs using tags per RFC 4151 ^RFC4151^:
+
+    tag:example.com,2017:example-interfaces
+
+    tag:example.com,2017:example-system
+
 
 ** Top-Level Data Definitions
 
@@ -2257,6 +2257,12 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+** v09 to v10
+
+- clarified <CODE BEGINS> is only for normative modules
+- clarified example module namespace URI conventions
+- clarified pyang usage for normative and example modules
 
 ** v08 to v09
 
