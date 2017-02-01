@@ -134,14 +134,16 @@ module to help readers understand the module structure.
 The meaning of the symbols in YANG tree diagrams is as follows:
 
 - Brackets "[" and "]" enclose list keys.
+- Curly braces "{" and "}" contain names of optional features that
+make the corresponding node conditional.
 - Abbreviations before data node names: "rw" means configuration
-(read-write) and "ro" state data (read-only).
-- Symbols after data node names: "?" means an optional node, "!" means
- a presence container, and "*" denotes a list and leaf-list.
+(read-write), "ro" state data (read-only), "-x" RPC operations or
+actions, and "-n" notifications.
+- Symbols after data node names: "?" means an optional node, "!" a
+container with presence, and "*" denotes a "list" or "leaf-list".
 - Parentheses enclose choice and case nodes, and case nodes are also
 marked with a colon (":").
 - Ellipsis ("...") stands for contents of subtrees that are not shown.
-
 
 * General Documentation Guidelines
 
@@ -2263,6 +2265,7 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 - clarified <CODE BEGINS> is only for normative modules
 - clarified example module namespace URI conventions
 - clarified pyang usage for normative and example modules
+- updated YANG tree diagrams section with text from RFC 8022
 
 ** v08 to v09
 
