@@ -1,5 +1,5 @@
 DOC_DRAFTBASE = draft-ietf-netmod-rfc6087bis
-DOC_DRAFT = ${DOC_DRAFTBASE}-11
+DOC_DRAFT = ${DOC_DRAFTBASE}-12
 DOC_SRC = yang-usage.txt
 DOC_BACK = yang-usage-back.xml
 INCLUDES =

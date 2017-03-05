@@ -360,13 +360,6 @@ Considerations section stating that there are no actions is removed by
 the RFC Editor before publication. Refer to the guidelines in ^RFC5226^
 for more details.
 
-** Module Usage Examples
-
-Each specification that defines one or more modules SHOULD contain
-usage examples, either throughout the document or in an appendix.
-This includes example XML instance document snippets to demonstrate
-the intended usage of the YANG module(s).
-
 *** Documents that Create a New Namespace
 
 If an Internet-Draft defines a new namespace that is to be
@@ -436,6 +429,14 @@ YANG module extraction is freely available:
 This tool can be used to verify that the "<CODE BEGINS>" and "<CODE ENDS>"
 tags are used correctly and that the normative YANG modules can be
 extracted correctly.
+
+** Module Usage Examples
+
+Each specification that defines one or more modules SHOULD contain
+usage examples, either throughout the document or in an appendix.
+This includes example XML instance document snippets to demonstrate
+the intended usage of the YANG module(s).
+
 
 * YANG Usage Guidelines @YangGuidelines@
 
@@ -2291,6 +2292,11 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+
+** v11 to v12
+
+- fix incoorect location of new Module Usage Examples section
 
 ** v10 to v11
 
