@@ -131,19 +131,44 @@ present in a real YANG module.
 YANG tree diagrams provide a concise representation of a YANG
 module to help readers understand the module structure.
 
-The meaning of the symbols in YANG tree diagrams is as follows:
+The meaning of the symbols in YANG tree diagrams is as follows.
+Each node is printed as:
 
-- Brackets "[" and "]" enclose list keys.
-- Curly braces "{" and "}" contain names of optional features that
-make the corresponding node conditional.
-- Abbreviations before data node names: "rw" means configuration
-(read-write), "ro" state data (read-only), "-x" RPC operations or
-actions, and "-n" notifications.
-- Symbols after data node names: "?" means an optional node, "!" a
-container with presence, and "*" denotes a "list" or "leaf-list".
-- Parentheses enclose choice and case nodes, and case nodes are also
-marked with a colon (":").
-- Ellipsis ("...") stands for contents of subtrees that are not shown.
+   <status> <flags> <name> <opts> <type> <if-features>
+
+   <status> is one of:
+     +  for current
+     x  for deprecated
+     o  for obsolete
+
+   <flags> is one of:
+     rw  for configuration data
+     ro  for non-configuration data
+     -x  for rpcs and actions
+     -n  for notifications
+
+   <name> is the name of the node
+     (<name>) means that the node is a choice node
+    :(<name>) means that the node is a case node
+
+   If the node is augmented into the tree from another module,
+   its name is printed as <prefix>:<name>.
+
+   <opts> is one of:
+     ?  for an optional leaf, choice, anydata or anyxml
+     !  for a presence container
+     *  for a leaf-list or list
+     [<keys>] for a list's keys
+
+   <type> is the name of the type for leafs and leaf-lists
+
+     If the type is a leafref, the type is printed as "-> TARGET",
+     where TARGET is either the leafref path, with prefixed removed
+     if possible.
+
+   <if-features> is the list of features this node depends on,
+     printed within curly brackets and a question mark "{...}?"
+
 
 * General Documentation Guidelines
 
@@ -334,6 +359,13 @@ considerations applicable to the document, then the IANA
 Considerations section stating that there are no actions is removed by
 the RFC Editor before publication. Refer to the guidelines in ^RFC5226^
 for more details.
+
+** Module Usage Examples
+
+Each specification that defines one or more modules SHOULD contain
+usage examples, either throughout the document or in an appendix.
+This includes example XML instance document snippets to demonstrate
+the intended usage of the YANG module(s).
 
 *** Documents that Create a New Namespace
 
@@ -2259,6 +2291,11 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+** v10 to v11
+
+- updated YANG tree diagram syntax to align with pyang 1.7.1
+- added general guideline to include module usage examples
 
 ** v09 to v10
 
