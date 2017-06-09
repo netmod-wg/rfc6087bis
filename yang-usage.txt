@@ -216,6 +216,7 @@ and "<CODE ENDS>" MUST be used to identify each code component.
 
 The "<CODE BEGINS>" tag SHOULD be followed by a string identifying
 the file name specified in Section 5.2 of ^RFC7950^.
+The name string form that includes the revision-date SHOULD be used.
 The following example is for the '2010-01-18' revision
 of the 'ietf-foo' module:
 
@@ -360,6 +361,12 @@ Considerations section stating that there are no actions is removed by
 the RFC Editor before publication. Refer to the guidelines in ^RFC5226^
 for more details.
 
+Each normative YANG module MUST be registered in the
+XML namespace Registry ^RFC3688^, and the YANG Module Names
+Registry ^RFC6020^.  This applies to new modules and updated modules.
+Examples of these registrations for the "ietf-template" module
+can be found in ^IANA^.
+
 *** Documents that Create a New Namespace
 
 If an Internet-Draft defines a new namespace that is to be
@@ -434,7 +441,8 @@ extracted correctly.
 
 Each specification that defines one or more modules SHOULD contain
 usage examples, either throughout the document or in an appendix.
-This includes example XML instance document snippets to demonstrate
+This includes example instance document snippets in an appropriate
+encoding (e.g., XML and/or JSON) to demonstrate
 the intended usage of the YANG module(s).
 
 
@@ -1802,6 +1810,55 @@ this type of information from a server.  At this time the
 best practice is to clearly document any relationship
 to other data structures in the "description" statement.
 
+*** Use of Leafref for Correlation
+
+The following example shows the use of the "leafref" data type
+for data correlation purposes:
+
+
+Not preferred:
+
+
+   list foo {
+      key name;
+      leaf name {
+        type string;
+      }
+      ...
+   }
+
+   list foo-state {
+      key name;
+      config false;
+      leaf name {
+        type string;
+      }
+      ...
+   }
+
+Preferred:
+
+
+   list foo {
+      key name;
+      leaf name {
+        type string;
+      }
+      ...
+   }
+
+   list foo-state {
+      key name;
+      config false;
+      leaf name {
+        type leafref {
+          path "/foo/name";
+          require-instance false;
+        }
+      }
+      ...
+   }
+
 
 ** Operational Data
 
@@ -1850,53 +1907,6 @@ configuration instances. The "require-instance" statement
 MAY be set to "false" (in YANG 1.1 modules only)
 to indicate instances are allowed in the operational state
 that do not exist in the associated configuration data.
-
-The following example shows the use of the "leafref" data type:
-
-
-Not preferred:
-
-
-   list foo {
-      key name;
-      leaf name {
-        type string;
-      }
-      ...
-   }
-
-   list foo-state {
-      key name;
-      config false;
-      leaf name {
-        type string;
-      }
-      ...
-   }
-
-Preferred:
-
-
-   list foo {
-      key name;
-      leaf name {
-        type string;
-      }
-      ...
-   }
-
-   list foo-state {
-      key name;
-      config false;
-      leaf name {
-        type leafref {
-          path "/foo/name";
-          require-instance false;
-        }
-      }
-      ...
-   }
-
 
 In the simplest use-cases, there is no interaction between
 configuration and operational data.
@@ -2293,6 +2303,13 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 
     -- RFC Ed.: remove this section before publication.
 
+** v12 to v13
+
+- Clarify that the revision-date SHOULD be used in a CODE BEGINS
+YANG file extraction macro.
+- Clarify the IANA requirements section wrt/ XML namkespace and YANG
+module name registries.
+- Clarify YANG Usage section wrt/ XML and/or JSON encoding format
 
 ** v11 to v12
 

@@ -1,10 +1,10 @@
 DOC_DRAFTBASE = draft-ietf-netmod-rfc6087bis
-DOC_DRAFT = ${DOC_DRAFTBASE}-12
+DOC_DRAFT = ${DOC_DRAFTBASE}-13
 DOC_SRC = yang-usage.txt
 DOC_BACK = yang-usage-back.xml
-INCLUDES =
+INCLUDES = ietf-template.yang
 
-PYANG = pyang
+PYANG = pyang --ietf
 YANG2DSDL = yang2dsdl
 
 OUTLINE2XML = $(HOME)/swdev/yang-gang/bin/outline2xml
