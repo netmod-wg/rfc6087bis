@@ -9,13 +9,13 @@ procedures are defined, which are intended to
 increase interoperability and usability
 of Network Configuration Protocol (NETCONF)
 and RESTCONF protocol implementations that utilize
-YANG data model modules.
+YANG data model modules. This document obsoletes RFC 6087.
 
 * Introduction
 
 The standardization of network configuration interfaces for use
 with the Network Configuration Protocol ^RFC6241^
-and RESTCONF ^I-D.ietf-netconf-restconf^
+and RESTCONF ^RFC8040^
 requires a modular set of data models, which can be reused
 and extended over time.
 
@@ -55,7 +55,7 @@ This document defines usage guidelines related to
 the NETCONF operations layer and NETCONF
 content layer, as defined in ^RFC6241^,
 and the RESTCONF methods and RESTCONF
-resources, as defined in ^I-D.ietf-netconf-restconf^,
+resources, as defined in ^RFC8040^,
 
 These guidelines are intended to be used by authors and
 reviewers to improve the readability
@@ -126,48 +126,11 @@ of YANG statement usage.  The invalid syntax "..." is sometimes
 used to indicate that additional YANG statements would be
 present in a real YANG module.
 
-* YANG Tree Diagrams @tree-diagrams@
+*** YANG Tree Diagrams @tree-diagrams@
 
-YANG tree diagrams provide a concise representation of a YANG
-module to help readers understand the module structure.
-
-The meaning of the symbols in YANG tree diagrams is as follows.
-Each node is printed as:
-
-   <status> <flags> <name> <opts> <type> <if-features>
-
-   <status> is one of:
-     +  for current
-     x  for deprecated
-     o  for obsolete
-
-   <flags> is one of:
-     rw  for configuration data
-     ro  for non-configuration data
-     -x  for rpcs and actions
-     -n  for notifications
-
-   <name> is the name of the node
-     (<name>) means that the node is a choice node
-    :(<name>) means that the node is a case node
-
-   If the node is augmented into the tree from another module,
-   its name is printed as <prefix>:<name>.
-
-   <opts> is one of:
-     ?  for an optional leaf, choice, anydata or anyxml
-     !  for a presence container
-     *  for a leaf-list or list
-     [<keys>] for a list's keys
-
-   <type> is the name of the type for leafs and leaf-lists
-
-     If the type is a leafref, the type is printed as "-> TARGET",
-     where TARGET is either the leafref path, with prefixed removed
-     if possible.
-
-   <if-features> is the list of features this node depends on,
-     printed within curly brackets and a question mark "{...}?"
+A simplified graphical representation of the data model is used in
+this document.  The meaning of the symbols in these diagrams is
+defined in ^I-D.ietf-netmod-yang-tree-diagrams^.
 
 
 * General Documentation Guidelines
@@ -241,9 +204,7 @@ the YANG tree diagram syntax MUST be present, containing the following text:
 
   A simplified graphical representation of the data model is used in
   this document.  The meaning of the symbols in these diagrams is
-  defined in [RFCXXXX].
-
-  -- RFC Editor: Replace XXXX with RFC number and remove note
+  defined in [I-D.ietf-netmod-yang-tree-diagrams].
 
 ** Tree Diagrams
 
@@ -1810,11 +1771,14 @@ this type of information from a server.  At this time the
 best practice is to clearly document any relationship
 to other data structures in the "description" statement.
 
-*** Use of Leafref for Correlation
+*** Use of Leafref for Key Correlation
+
+Sometimes it is not practical to augment a data structure.
+For example, the correlated data could have different keys
+or contain mandatory nodes.
 
 The following example shows the use of the "leafref" data type
 for data correlation purposes:
-
 
 Not preferred:
 
@@ -1827,7 +1791,7 @@ Not preferred:
       ...
    }
 
-   list foo-state {
+   list foo-addon {
       key name;
       config false;
       leaf name {
@@ -1838,7 +1802,6 @@ Not preferred:
 
 Preferred:
 
-
    list foo {
       key name;
       leaf name {
@@ -1847,7 +1810,7 @@ Preferred:
       ...
    }
 
-   list foo-state {
+   list foo-addon {
       key name;
       config false;
       leaf name {
@@ -1856,7 +1819,10 @@ Preferred:
           require-instance false;
         }
       }
-      ...
+      leaf addon {
+        type string;
+        mandatory true;
+      }
    }
 
 
@@ -1867,156 +1833,166 @@ could be considered operational data.  The relationship between
 configuration (i.e., "config" statement has a value of "true")
 and operational data can be complex.
 
-One challenge for client developers is determining if
-the configured value is being used, which requires the
-developer to know which operational data parameters are
-associated with the particular configuration object(s).
+The original set of datastores defined in NETCONF (i.e., candidate,
+running, and startup) are not sufficient to fully manage
+a device with multiple sources of configuration data.
+In additional, a separate datastore
+is needed to store operational state and other data
+such as statistics. Refer to ^I-D.ietf-netmod-revised-datastores^
+for details on this new "revised datastore" architecture.
+Guidelines for usage of the new datastores (including the
+operational datastore) is defined in ^I-D.dsdt-nmda-guidelines^.
 
-If possible, operational data SHOULD be combined with
-its associated configuration data.  This prevents
-duplication of key leafs and ancestor nodes.
-It also prevents race conditions for retrieval of
-dynamic entries, and allows configuration and operational
-data to be retrieved together with minimal message overhead.
-
-Not preferred:
-
-   list foo {
-     ...
-   }
-
-   list foo-state {
-     config false;
-     ...
-   }
-
-Preferred:
-
-   list foo {
-     container foo-state {
-       config false;
-       ...
-     }
-   }
-
-If it is not possible to combine configuration and operational
-data, then the keys used to represent list entries SHOULD
-be the same type. The "leafref" data type SHOULD be used in
-operational data for key leafs that have corresponding
-configuration instances. The "require-instance" statement
-MAY be set to "false" (in YANG 1.1 modules only)
-to indicate instances are allowed in the operational state
-that do not exist in the associated configuration data.
-
-In the simplest use-cases, there is no interaction between
-configuration and operational data.
-For example, the arbitrary administrative name or
-sequence number assigned to an access control rule.  The configured
-value is always the value that is being used by the system.
-
-However, some configuration parameters interact with routing
-and other signalling protocols, such that the operational value in use
-by the system may not be the same as the configured value.
-Other parameters specify the desired state, but environmental
-and other factors can cause the actual state to be different.
-
-For example a "temperature" configuration setting only
-represents the desired temperature.  An operational data
-parameter is needed that reports the actual temperature
-in order to determine if the cooling system is operating
-correctly.  YANG has no mechanism other than the "description"
-statement to associate the desired temperature and
-the actual temperature.
-
-Careful consideration needs to be given to the location
-of operational data.  It can either be located
-within the configuration subtree for which it applies,
-or it can be located outside the particular configuration subtree.
-Placing operational data within
-the configuration subtree is appropriate if the operational values
-can only exist if the configuration exists.  Placing operational data
-outside the configuration subtree is appropriate if the operational
-values can exist without corresponding configuration (e.g., system
-generated interfaces).
-
-The "interfaces" and "interfaces-state" subtrees defined in ^RFC7223^
-are an example of a complex relationship between configuration
-and operational data.  The operational values can include interface
-entries that have been discovered or initialized by the system.
-An interface may be in use that has not been configured at all.
-Therefore, the operational data for an interface cannot be located
-within the configuration for that same interface.
-
-Sometimes the configured value represents some sort of procedure to
-be followed, in which the system will select an actual value, based
-on protocol negotiation.  In this case it is RECOMMENDED to have a
-separate config false value to represented the resulting state.  For
-instance:
-
-   leaf duplex-admin-mode {
-     type enumeration {
-       enum auto;
-       enum half;
-       enum full;
-     }
-   }
-
-   leaf duplex-oper-mode {
-     config false;
-     type enumeration {
-       enum half;
-       enum full;
-     }
-   }
-
-For example a "duplex" mode configuration may be "auto"
-to auto-negotiate the actual value to be used.  The operational
-parameter will never contain the value "auto".  It will always contain
-the result of the auto-negotiation, such as "half" or "full".
-This is just one way in which the configuration data model
-is not exactly the same as the operational data model.
-Another is if the detailed properties of the data are different
-for configured vs. learned entries.
-
-If all the data model properties are aligned between configuration
-and operational data, then it can be useful to define the
-configuration parameters within a grouping, and then replicate that
-grouping within the operational data portion of
-the data model.
-
-    grouping parms {
-       // do not use config-stmt in any of the nodes
-       // placed in this grouping
-    }
-
-    container foo {
-      uses parms;  // these are all config=true by default
-      state {
-        config false;  // only exists if foo config exists
-        uses parms;
-      }
-    }
-
-Note that this mechanism can also be used if the configuration
-and operational data are in separate sub-trees:
-
-    container bar { // bar config can exist without bar-state
-      config true;
-      uses parms;
-    }
-
-    container bar-state {  // bar-state can exist without bar
-      config false;
-      uses parms;
-    }
-
-The need to replicate objects or define different operational data
-objects depends on the data model.  It is not possible to define
-one approach that will be optimal for all data models.
-Designers SHOULD describe the relationship in detail between
-configuration objects and any associated operational data objects.
-The "description" statements for both the configuration and the
-operational data SHOULD be used for this purpose.
+#One challenge for client developers is determining if
+#the configured value is being used, which requires the
+#developer to know which operational data parameters are
+#associated with the particular configuration object(s).
+#
+#If possible, operational data SHOULD be combined with
+#its associated configuration data.  This prevents
+#duplication of key leafs and ancestor nodes.
+#It also prevents race conditions for retrieval of
+#dynamic entries, and allows configuration and operational
+#data to be retrieved together with minimal message overhead.
+#
+#Not preferred:
+#
+#   list foo {
+#     ...
+#   }
+#
+#   list foo-state {
+#     config false;
+#     ...
+#   }
+#
+#Preferred:
+#
+#   list foo {
+#     container foo-state {
+#       config false;
+#       ...
+#     }
+#   }
+#
+#If it is not possible to combine configuration and operational
+#data, then the keys used to represent list entries SHOULD
+#be the same type. The "leafref" data type SHOULD be used in
+#operational data for key leafs that have corresponding
+#configuration instances. The "require-instance" statement
+#MAY be set to "false" (in YANG 1.1 modules only)
+#to indicate instances are allowed in the operational state
+#that do not exist in the associated configuration data.
+#
+#In the simplest use-cases, there is no interaction between
+#configuration and operational data.
+#For example, the arbitrary administrative name or
+#sequence number assigned to an access control rule.  The configured
+#value is always the value that is being used by the system.
+#
+#However, some configuration parameters interact with routing
+#and other signalling protocols, such that the operational value in use
+#by the system may not be the same as the configured value.
+#Other parameters specify the desired state, but environmental
+#and other factors can cause the actual state to be different.
+#
+#For example a "temperature" configuration setting only
+#represents the desired temperature.  An operational data
+#parameter is needed that reports the actual temperature
+#in order to determine if the cooling system is operating
+#correctly.  YANG has no mechanism other than the "description"
+#statement to associate the desired temperature and
+#the actual temperature.
+#
+#Careful consideration needs to be given to the location
+#of operational data.  It can either be located
+#within the configuration subtree for which it applies,
+#or it can be located outside the particular configuration subtree.
+#Placing operational data within
+#the configuration subtree is appropriate if the operational values
+#can only exist if the configuration exists.  Placing operational data
+#outside the configuration subtree is appropriate if the operational
+#values can exist without corresponding configuration (e.g., system
+#generated interfaces).
+#
+#The "interfaces" and "interfaces-state" subtrees defined in ^RFC7223^
+#are an example of a complex relationship between configuration
+#and operational data.  The operational values can include interface
+#entries that have been discovered or initialized by the system.
+#An interface may be in use that has not been configured at all.
+#Therefore, the operational data for an interface cannot be located
+#within the configuration for that same interface.
+#
+#Sometimes the configured value represents some sort of procedure to
+#be followed, in which the system will select an actual value, based
+#on protocol negotiation.  In this case it is RECOMMENDED to have a
+#separate config false value to represented the resulting state.  For
+#instance:
+#
+#   leaf duplex-admin-mode {
+#     type enumeration {
+#       enum auto;
+#       enum half;
+#       enum full;
+#     }
+#   }
+#
+#   leaf duplex-oper-mode {
+#     config false;
+#     type enumeration {
+#       enum half;
+#       enum full;
+#     }
+#   }
+#
+#For example a "duplex" mode configuration may be "auto"
+#to auto-negotiate the actual value to be used.  The operational
+#parameter will never contain the value "auto".  It will always contain
+#the result of the auto-negotiation, such as "half" or "full".
+#This is just one way in which the configuration data model
+#is not exactly the same as the operational data model.
+#Another is if the detailed properties of the data are different
+#for configured vs. learned entries.
+#
+#If all the data model properties are aligned between configuration
+#and operational data, then it can be useful to define the
+#configuration parameters within a grouping, and then replicate that
+#grouping within the operational data portion of
+#the data model.
+#
+#    grouping parms {
+#       // do not use config-stmt in any of the nodes
+#       // placed in this grouping
+#    }
+#
+#    container foo {
+#      uses parms;  // these are all config=true by default
+#      state {
+#        config false;  // only exists if foo config exists
+#        uses parms;
+#      }
+#    }
+#
+#Note that this mechanism can also be used if the configuration
+#and operational data are in separate sub-trees:
+#
+#    container bar { // bar config can exist without bar-state
+#      config true;
+#      uses parms;
+#    }
+#
+#    container bar-state {  // bar-state can exist without bar
+#      config false;
+#      uses parms;
+#    }
+#
+#The need to replicate objects or define different operational data
+#objects depends on the data model.  It is not possible to define
+#one approach that will be optimal for all data models.
+#Designers SHOULD describe the relationship in detail between
+#configuration objects and any associated operational data objects.
+#The "description" statements for both the configuration and the
+#operational data SHOULD be used for this purpose.
 
 ** Performance Considerations
 
@@ -2296,6 +2272,7 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 - Added YANG 1.1 guidelines
 - Added Data Model Constraints section
 - Added mention of RESTCONF protocol
+- Added mention of Revised Datastores and associated guidelines
 
 *! start-appendix
 
@@ -2307,13 +2284,17 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 
 - Clarify that the revision-date SHOULD be used in a CODE BEGINS
 YANG file extraction macro.
-- Clarify the IANA requirements section wrt/ XML namkespace and YANG
+- Clarify the IANA requirements section wrt/ XML namespace and YANG
 module name registries.
-- Clarify YANG Usage section wrt/ XML and/or JSON encoding format
+- Clarify YANG Usage section wrt/ XML and/or JSON encoding format.
+- Update Operation Data section to consider revised datastores.
+- Add reference to YANG Tree Diagrams and update 2 sections that
+use this reference.
+- Add reference to Revised Datastores and guidelines drafts
 
 ** v11 to v12
 
-- fix incoorect location of new Module Usage Examples section
+- fix incorrect location of new Module Usage Examples section
 
 ** v10 to v11
 

@@ -409,27 +409,106 @@ RFC documents contain a number of fixed elements such as the title page header, 
 <seriesInfo name="DOI" value="10.17487/RFC7841"/>
 </reference>
 
-<reference anchor="I-D.ietf-netconf-restconf">
+
+<reference anchor="RFC8040" target="http://www.rfc-editor.org/info/rfc8040">
 <front>
 <title>RESTCONF Protocol</title>
-<author initials="A" surname="Bierman" fullname="Andy Bierman">
+<author initials="A." surname="Bierman" fullname="A. Bierman">
 <organization/>
 </author>
+<author initials="M." surname="Bjorklund" fullname="M. Bjorklund">
+<organization/>
+</author>
+<author initials="K." surname="Watsen" fullname="K. Watsen">
+<organization/>
+</author>
+<date year="2017" month="January"/>
+<abstract>
+<t>
+This document describes an HTTP-based protocol that provides a programmatic interface for accessing data defined in YANG, using the datastore concepts defined in the Network Configuration Protocol (NETCONF).
+</t>
+</abstract>
+</front>
+<seriesInfo name="RFC" value="8040"/>
+<seriesInfo name="DOI" value="10.17487/RFC8040"/>
+</reference>
+
+<reference anchor="I-D.ietf-netmod-yang-tree-diagrams">
+<front>
+<title>YANG Tree Diagrams</title>
 <author initials="M" surname="Bjorklund" fullname="Martin Bjorklund">
+<organization/>
+</author>
+<author initials="L" surname="Berger" fullname="Lou Berger">
+<organization/>
+</author>
+<date month="June" day="13" year="2017"/>
+<abstract>
+<t>
+This document captures the current syntax used in YANG module Tree Diagrams. The purpose of the document is to provide a single location for this definition. This syntax may be updated from time to time based on the evolution of the YANG language.
+</t>
+</abstract>
+</front>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-00"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-00.txt"/>
+</reference>
+
+<reference anchor="I-D.ietf-netmod-revised-datastores">
+<front>
+<title>Network Management Datastore Architecture</title>
+<author initials="M" surname="Bjorklund" fullname="Martin Bjorklund">
+<organization/>
+</author>
+<author initials="J" surname="Schoenwaelder" fullname="Juergen Schoenwaelder">
+<organization/>
+</author>
+<author initials="P" surname="Shafer" fullname="Philip Shafer">
 <organization/>
 </author>
 <author initials="K" surname="Watsen" fullname="Kent Watsen">
 <organization/>
 </author>
-<date month="September" day="28" year="2016"/>
+<author initials="R" surname="Wilton" fullname="Robert Wilton">
+<organization/>
+</author>
+<date month="May" day="11" year="2017"/>
 <abstract>
 <t>
-This document describes an HTTP-based protocol that provides a programmatic interface for accessing data defined in YANG, using the datastore concepts defined in NETCONF.
+Datastores are a fundamental concept binding the data models written in the YANG data modeling language to network management protocols such as NETCONF and RESTCONF. This document defines an architectural framework for datastores based on the experience gained with the initial simpler model, addressing requirements that were not well supported in the initial model.
 </t>
 </abstract>
 </front>
-<seriesInfo name="Internet-Draft" value="draft-ietf-netconf-restconf-17"/>
-<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netconf-restconf-17.txt"/>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-revised-datastores-02"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-revised-datastores-02.txt"/>
+</reference>
+
+<reference anchor="I-D.dsdt-nmda-guidelines">
+<front>
+<title>Guidelines for YANG Module Authors (NMDA)</title>
+<author initials="M" surname="Bjorklund" fullname="Martin Bjorklund">
+<organization/>
+</author>
+<author initials="J" surname="Schoenwaelder" fullname="Juergen Schoenwaelder">
+<organization/>
+</author>
+<author initials="P" surname="Shafer" fullname="Philip Shafer">
+<organization/>
+</author>
+<author initials="K" surname="Watsen" fullname="Kent Watsen">
+<organization/>
+</author>
+<author initials="R" surname="Wilton" fullname="Robert Wilton">
+<organization/>
+</author>
+<date month="May" day="9" year="2017"/>
+<abstract>
+<t>
+The "Network Management Datastore Architecture" (NMDA) adds the ability to inspect the current operational values for configuration, allowing clients to use identical paths for retrieving the configured values and the operational values. This change will simplify models and help modelers, but will create a period of transition as NMDA becomes a standard and is widely implemented. During that interim, the guidelines given in this document should help modelers find an optimal path forward.
+</t>
+</abstract>
+</front>
+<seriesInfo name="Internet-Draft" value="draft-dsdt-nmda-guidelines-01"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-dsdt-nmda-guidelines-01.txt"/>
 </reference>
 
 </references>
