@@ -1828,171 +1828,74 @@ Preferred:
 
 ** Operational Data
 
-In YANG, any data that has a "config" statement value of "false"
-could be considered operational data.  The relationship between
-configuration (i.e., "config" statement has a value of "true")
-and operational data can be complex.
+The following guidelines are meant to help modelers develop
+YANG models that will maximize the utility of the model with
+both current implementations and Network Management Datastore
+Architecture (NMDA) capable implementations ^I-D.ietf-netmod-revised-datastores^.
 
-The original set of datastores defined in NETCONF (i.e., candidate,
-running, and startup) are not sufficient to fully manage
-a device with multiple sources of configuration data.
-In additional, a separate datastore
-is needed to store operational state and other data
-such as statistics. Refer to ^I-D.ietf-netmod-revised-datastores^
-for details on this new "revised datastore" architecture.
-Guidelines for usage of the new datastores (including the
-operational datastore) is defined in ^I-D.dsdt-nmda-guidelines^.
+New models and models that are not concerned with the
+operational state of configuration information SHOULD
+immediately be structured to be NMDA-compatible.
 
-#One challenge for client developers is determining if
-#the configured value is being used, which requires the
-#developer to know which operational data parameters are
-#associated with the particular configuration object(s).
-#
-#If possible, operational data SHOULD be combined with
-#its associated configuration data.  This prevents
-#duplication of key leafs and ancestor nodes.
-#It also prevents race conditions for retrieval of
-#dynamic entries, and allows configuration and operational
-#data to be retrieved together with minimal message overhead.
-#
-#Not preferred:
-#
-#   list foo {
-#     ...
-#   }
-#
-#   list foo-state {
-#     config false;
-#     ...
-#   }
-#
-#Preferred:
-#
-#   list foo {
-#     container foo-state {
-#       config false;
-#       ...
-#     }
-#   }
-#
-#If it is not possible to combine configuration and operational
-#data, then the keys used to represent list entries SHOULD
-#be the same type. The "leafref" data type SHOULD be used in
-#operational data for key leafs that have corresponding
-#configuration instances. The "require-instance" statement
-#MAY be set to "false" (in YANG 1.1 modules only)
-#to indicate instances are allowed in the operational state
-#that do not exist in the associated configuration data.
-#
-#In the simplest use-cases, there is no interaction between
-#configuration and operational data.
-#For example, the arbitrary administrative name or
-#sequence number assigned to an access control rule.  The configured
-#value is always the value that is being used by the system.
-#
-#However, some configuration parameters interact with routing
-#and other signalling protocols, such that the operational value in use
-#by the system may not be the same as the configured value.
-#Other parameters specify the desired state, but environmental
-#and other factors can cause the actual state to be different.
-#
-#For example a "temperature" configuration setting only
-#represents the desired temperature.  An operational data
-#parameter is needed that reports the actual temperature
-#in order to determine if the cooling system is operating
-#correctly.  YANG has no mechanism other than the "description"
-#statement to associate the desired temperature and
-#the actual temperature.
-#
-#Careful consideration needs to be given to the location
-#of operational data.  It can either be located
-#within the configuration subtree for which it applies,
-#or it can be located outside the particular configuration subtree.
-#Placing operational data within
-#the configuration subtree is appropriate if the operational values
-#can only exist if the configuration exists.  Placing operational data
-#outside the configuration subtree is appropriate if the operational
-#values can exist without corresponding configuration (e.g., system
-#generated interfaces).
-#
-#The "interfaces" and "interfaces-state" subtrees defined in ^RFC7223^
-#are an example of a complex relationship between configuration
-#and operational data.  The operational values can include interface
-#entries that have been discovered or initialized by the system.
-#An interface may be in use that has not been configured at all.
-#Therefore, the operational data for an interface cannot be located
-#within the configuration for that same interface.
-#
-#Sometimes the configured value represents some sort of procedure to
-#be followed, in which the system will select an actual value, based
-#on protocol negotiation.  In this case it is RECOMMENDED to have a
-#separate config false value to represented the resulting state.  For
-#instance:
-#
-#   leaf duplex-admin-mode {
-#     type enumeration {
-#       enum auto;
-#       enum half;
-#       enum full;
-#     }
-#   }
-#
-#   leaf duplex-oper-mode {
-#     config false;
-#     type enumeration {
-#       enum half;
-#       enum full;
-#     }
-#   }
-#
-#For example a "duplex" mode configuration may be "auto"
-#to auto-negotiate the actual value to be used.  The operational
-#parameter will never contain the value "auto".  It will always contain
-#the result of the auto-negotiation, such as "half" or "full".
-#This is just one way in which the configuration data model
-#is not exactly the same as the operational data model.
-#Another is if the detailed properties of the data are different
-#for configured vs. learned entries.
-#
-#If all the data model properties are aligned between configuration
-#and operational data, then it can be useful to define the
-#configuration parameters within a grouping, and then replicate that
-#grouping within the operational data portion of
-#the data model.
-#
-#    grouping parms {
-#       // do not use config-stmt in any of the nodes
-#       // placed in this grouping
-#    }
-#
-#    container foo {
-#      uses parms;  // these are all config=true by default
-#      state {
-#        config false;  // only exists if foo config exists
-#        uses parms;
-#      }
-#    }
-#
-#Note that this mechanism can also be used if the configuration
-#and operational data are in separate sub-trees:
-#
-#    container bar { // bar config can exist without bar-state
-#      config true;
-#      uses parms;
-#    }
-#
-#    container bar-state {  // bar-state can exist without bar
-#      config false;
-#      uses parms;
-#    }
-#
-#The need to replicate objects or define different operational data
-#objects depends on the data model.  It is not possible to define
-#one approach that will be optimal for all data models.
-#Designers SHOULD describe the relationship in detail between
-#configuration objects and any associated operational data objects.
-#The "description" statements for both the configuration and the
-#operational data SHOULD be used for this purpose.
+The remaining are options that MAY be followed during the time
+that NMDA mechanisms are being defined.  These options will be
+removed in a future update of this document once this definition
+is complete.
+
+(a) Models that require immediate support for "in use" and
+"system created" information SHOULD be structured for NMDA.  A
+non-NMDA version of these models SHOULD exist, either an
+existing model or a model created either by hand or with
+suitable tools that mirror the current modeling strategies.
+Both the NMDA and the non-NMDA modules SHOULD be published in
+the same document, with NMDA modules in the document main body
+and the non-NMDA modules in a non-normative appendix.  The use
+of the non-NMDA model will allow temporary bridging of the
+time period until NMDA implementations are available.
+
+(b) For published models, the model should be republished with
+an NMDA-compatible structure, deprecating non-NMDA constructs.
+For example, the "ietf-interfaces" model in ^RFC7223^ will be
+restructured as an NMDA-compatible model.  The
+"/interfaces-state" hierarchy will be marked "status
+deprecated".  Models that mark their "/foo-state" hierarchy
+with "status deprecated" will allow NMDA-capable
+implementations to avoid the cost of duplicating the state
+nodes, while enabling non-NMDA-capable implementations to
+utilize them for access to the operational values.
+
+(c) For models that augment models which have not been
+structured with the NMDA, the modeler will have to consider
+the structure of the base model and the guidelines listed
+above.  Where possible, such models should move to new
+revisions of the base model that are NMDA-compatible.  When
+that is not possible, augmenting "state" containers SHOULD be
+avoided, with the expectation that the base model will be
+re-released with the state containers marked as deprecated.
+It is RECOMMENDED to augment only the "/foo" hierarchy of the
+base model.  Where this recommendation cannot be followed,
+then any new "state" elements SHOULD be included in their own
+module.
+
+To create the temporary non-NMDA model from an NMDA model, the
+following steps can be taken:
+
+- Rename the module name by appending "-state" to the
+  original module's name
+- Change the namespace by appending "-state" to the original
+  namespace value
+- Change the prefix by appending "-s" to the original prefix
+  value
+- Set all top-level nodes to have a "config" statement of
+  value "false"
+- add an import to the original module (e.g., for typedef
+  definitions)
+- modify any imports, used for leafrefs or identityrefs, to
+  import the -state version of the module
+- remove any 'typedef' or 'identity' definitions
+- prefix any uses of the typedefs and identities accordingly
+- update leafref and augment paths to use the new "-s" prefix
+
 
 ** Performance Considerations
 
@@ -2242,7 +2145,7 @@ The structure and contents of this document are adapted from ^RFC4181^,
 guidelines for MIB Documents, by C. M. Heard.
 
 The working group thanks Martin Bjorklund, Juergen
-Schoenwaelder, Ladislav Lhotka, and Jernej Tuljak for their
+Schoenwaelder, Ladislav Lhotka, Jernej Tuljak, and Lou Berger for their
 extensive reviews and contributions to this document.
 
 * Changes Since RFC 6087
@@ -2272,13 +2175,17 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 - Added YANG 1.1 guidelines
 - Added Data Model Constraints section
 - Added mention of RESTCONF protocol
-- Added mention of Revised Datastores and associated guidelines
+- Added guidelines for NMDA Revised Datastores
 
 *! start-appendix
 
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+** v13 to v14
+
+- Replaced sec. 4.23 Operational Data with NMDA text from Lou Berger
 
 ** v12 to v13
 
