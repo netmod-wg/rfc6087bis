@@ -1828,6 +1828,180 @@ Preferred:
 
 ** Operational Data
 
+In YANG, any data that has a "config" statement value of "false"
+could be considered operational data.  The relationship between
+configuration (i.e., "config" statement has a value of "true")
+and operational data can be complex.
+
+*** Data Modeling
+
+One challenge for client developers is determining if
+the configured value is being used, which requires the
+developer to know which operational data parameters are
+associated with the particular configuration object(s).
+
+If possible, operational data SHOULD be combined with
+its associated configuration data.  This prevents
+duplication of key leafs and ancestor nodes.
+It also prevents race conditions for retrieval of
+dynamic entries, and allows configuration and operational
+data to be retrieved together with minimal message overhead.
+
+Not preferred:
+
+   list foo {
+     ...
+   }
+
+   list foo-state {
+     config false;
+     ...
+   }
+
+Preferred:
+
+   list foo {
+     container foo-state {
+       config false;
+       ...
+     }
+   }
+
+If it is not possible to combine configuration and operational
+data, then the keys used to represent list entries SHOULD
+be the same type. The "leafref" data type SHOULD be used in
+operational data for key leafs that have corresponding
+configuration instances. The "require-instance" statement
+MAY be set to "false" (in YANG 1.1 modules only)
+to indicate instances are allowed in the operational state
+that do not exist in the associated configuration data.
+
+In the simplest use-cases, there is no interaction between
+configuration and operational data.
+For example, the arbitrary administrative name or
+sequence number assigned to an access control rule.  The configured
+value is always the value that is being used by the system.
+
+However, some configuration parameters interact with routing
+and other signalling protocols, such that the operational value in use
+by the system may not be the same as the configured value.
+Other parameters specify the desired state, but environmental
+and other factors can cause the actual state to be different.
+
+For example a "temperature" configuration setting only
+represents the desired temperature.  An operational data
+parameter is needed that reports the actual temperature
+in order to determine if the cooling system is operating
+correctly.  YANG has no mechanism other than the "description"
+statement to associate the desired temperature and
+the actual temperature.
+
+Careful consideration needs to be given to the location
+of operational data.  It can either be located
+within the configuration subtree for which it applies,
+or it can be located outside the particular configuration subtree.
+Placing operational data within
+the configuration subtree is appropriate if the operational values
+can only exist if the configuration exists.  Placing operational data
+outside the configuration subtree is appropriate if the operational
+values can exist without corresponding configuration (e.g., system
+generated interfaces).
+
+The "interfaces" and "interfaces-state" subtrees defined in ^RFC7223^
+are an example of a complex relationship between configuration
+and operational data.  The operational values can include interface
+entries that have been discovered or initialized by the system.
+An interface may be in use that has not been configured at all.
+Therefore, the operational data for an interface cannot be located
+within the configuration for that same interface.
+
+Sometimes the configured value represents some sort of procedure to
+be followed, in which the system will select an actual value, based
+on protocol negotiation.  In this case it is RECOMMENDED to have a
+separate config false value to represented the resulting state.  For
+instance:
+
+   leaf duplex-admin-mode {
+     type enumeration {
+       enum auto;
+       enum half;
+       enum full;
+     }
+   }
+
+   leaf duplex-oper-mode {
+     config false;
+     type enumeration {
+       enum half;
+       enum full;
+     }
+   }
+
+For example a "duplex" mode configuration may be "auto"
+to auto-negotiate the actual value to be used.  The operational
+parameter will never contain the value "auto".  It will always contain
+the result of the auto-negotiation, such as "half" or "full".
+This is just one way in which the configuration data model
+is not exactly the same as the operational data model.
+Another is if the detailed properties of the data are different
+for configured vs. learned entries.
+
+If all the data model properties are aligned between configuration
+and operational data, then it can be useful to define the
+configuration parameters within a grouping, and then replicate that
+grouping within the operational data portion of
+the data model.
+
+    grouping parms {
+       // do not use config-stmt in any of the nodes
+       // placed in this grouping
+    }
+
+    container foo {
+      uses parms;  // these are all config=true by default
+      state {
+        config false;  // only exists if foo config exists
+        uses parms;
+      }
+    }
+
+Note that this mechanism can also be used if the configuration
+and operational data are in separate sub-trees:
+
+    container bar { // bar config can exist without bar-state
+      config true;
+      uses parms;
+    }
+
+    container bar-state {  // bar-state can exist without bar
+      config false;
+      uses parms;
+    }
+
+The need to replicate objects or define different operational data
+objects depends on the data model.  It is not possible to define
+one approach that will be optimal for all data models.
+Designers SHOULD describe the relationship in detail between
+configuration objects and any associated operational data objects.
+The "description" statements for both the configuration and the
+operational data SHOULD be used for this purpose.
+
+*** NMDA Guidelines
+
+Operational data includes both config "false" nodes as well as,
+on servers supporting <operational> [draft-ietf-netmod-revised-datastores],
+the applied value of config "true" nodes.
+
+YANG modules SHOULD be designed assuming they will be used on
+servers supporting <operational>.  With this in mind, YANG
+modules SHOULD define config "false" wherever they make sense
+to the data model.  Config "false" nodes SHOULD NOT be defined
+to provide the operational value for configuration nodes,
+except when the value space of a configured and operational
+values may differ, in which case a distinct config "false"
+node SHOULD be defined to hold the operational value for the
+configured node.
+
 The following guidelines are meant to help modelers develop
 YANG models that will maximize the utility of the model with
 both current implementations and Network Management Datastore
