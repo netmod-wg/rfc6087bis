@@ -1852,13 +1852,13 @@ Preferred:
 
 ** Operational State
 
-The management of YANG operational state has been refined over time.
+The modeling operational state with YANG has been refined over time.
 At first, only data that has a "config" statement value of "false"
 was considered to be operational state. This data was not considered to
 be part of any datastore, which made YANG XPath definition much more
 complicated.
 
-YANG operational state is now modeled according to new NMDA,
+Operational state is now modeled using YANG according to new NMDA,
 and is now conceptually contained in the operational datastore,
 which also includes the operational values of configuration data.
 There is no longer any need to duplicate data structures
@@ -1922,28 +1922,6 @@ MAY be set to "false" (in YANG 1.1 modules only)
 to indicate instances are allowed in the operational state
 that do not exist in the associated configuration data.
 
-If all the data model properties are aligned between configuration
-data and operational state, then it can be useful to define the
-configuration parameters within a grouping, and then replicate that
-grouping within the operational state portion of
-the data model.
-
-    grouping parms {
-       // do not use config-stmt in any of the nodes
-       // placed in this grouping
-    }
-
-    container bar { // bar config can exist without bar-state
-      config true;
-      uses parms;
-    }
-
-    container bar-state {  // bar-state can exist without bar
-      status deprecated;
-      config false;
-      uses parms;
-    }
-
 The need to replicate objects or define different operational state
 objects depends on the data model.  It is not possible to define
 one approach that will be optimal for all data models.
@@ -1966,10 +1944,10 @@ node SHOULD be defined to hold the operational value for the
 configured node.
 
 The following guidelines are meant to help modelers develop
-YANG models that will maximize the utility of the model with
+YANG modules that will maximize the utility of the model with
 both current and new implementations.
 
-New models and models that are not concerned with the
+New modules and modules that are not concerned with the
 operational state of configuration information SHOULD
 immediately be structured to be NMDA-compatible, as
 described in ^combine-data^.
@@ -1977,16 +1955,15 @@ described in ^combine-data^.
 The remaining are options that MAY be followed during the time
 that NMDA mechanisms are being defined.
 
-(a) Models that require immediate support for the NMDA "origin" meta data,
-such as "in use" and "system created" information,
-SHOULD be structured for NMDA.  A non-NMDA version of these
+(a) Modules that require immediate support for the NMDA features
+SHOULD be structured for NMDA.  A temporary non-NMDA version of these
 models SHOULD exist, either an
 existing model or a model created either by hand or with
 suitable tools that mirror the current modeling strategies.
 Both the NMDA and the non-NMDA modules SHOULD be published in
 the same document, with NMDA modules in the document main body
 and the non-NMDA modules in a non-normative appendix.  The use
-of the non-NMDA model will allow temporary bridging of the
+of the non-NMDA module will allow temporary bridging of the
 time period until NMDA implementations are available.
 
 (b) For published models, the model should be republished with
@@ -2041,16 +2018,15 @@ following steps can be taken:
   to non-NMDA aware clients. Set the "status" statement to "deprecated" for each new node.
 - The module description SHOULD clearly identify the module as a temporary non-NMDA module
 
-**** NMDA Module Examples
 
-Example: Create a New Module
+**** Example: Create a New NMDA Module
 
 Create an NMDA-compliant module, using combined configuration
 and state subtrees, whenever possible.
 
   module example-foo {
     namespace "urn:example.com:params:xml:ns:yang:example-foo";
-    prefix "foo-";
+    prefix "foo";
 
     container foo {
       // configuration data child nodes
@@ -2059,9 +2035,9 @@ and state subtrees, whenever possible.
     }
  }
 
-Example: Convert an old Non-NMDA Module
+**** Example: Convert an old Non-NMDA Module
 
-Do not remove non-complaint objects from existing modules.
+Do not remove non-compliant objects from existing modules.
 Instead, change the status to "deprecated". At some point,
 usually after 1 year, the status MAY be changed to "obsolete".
 
@@ -2085,7 +2061,7 @@ Converted NMDA Module:
 
   module example-foo {
     namespace "urn:example.com:params:xml:ns:yang:example-foo";
-    prefix "foo-";
+    prefix "foo";
 
     container foo {
       // configuration data child nodes
@@ -2102,7 +2078,7 @@ Converted NMDA Module:
     }
  }
 
-Example: Create a Temporary NMDA Module:
+**** Example: Create a Temporary NMDA Module:
 
 Create a new module that contains the top-level operational state data nodes
 that would have been available before they were combined with configuration
