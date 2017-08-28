@@ -114,10 +114,10 @@ Network Management Datastore Architecture
 and are not redefined here:
 
 - configuration
-- conventional configuration datastore (also called conventional datastore)
+- conventional configuration datastore
 - datastore
 - operational state
-- operational state datastore (also called operational datastore)
+- operational state datastore
 
 
 
@@ -1859,10 +1859,10 @@ be part of any datastore, which made YANG XPath definition much more
 complicated.
 
 Operational state is now modeled using YANG according to new NMDA,
-and is now conceptually contained in the operational datastore,
+and is now conceptually contained in the operational state datastore,
 which also includes the operational values of configuration data.
 There is no longer any need to duplicate data structures
-to provide separate configuration and operational data
+to provide separate configuration and operational state
 sections.
 
 This section describes some data modeling issues related to
@@ -1921,7 +1921,7 @@ operational state SHOULD be used for this purpose.
 *** NMDA Transition Guidelines
 
 YANG modules SHOULD be designed assuming they will be used on
-servers supporting the operational datastore.  With this in mind,
+servers supporting the operational state datastore.  With this in mind,
 YANG modules SHOULD define config "false" wherever they make sense
 to the data model.  Config "false" nodes SHOULD NOT be defined
 to provide the operational value for configuration nodes,
@@ -1943,8 +1943,8 @@ The remaining are options that MAY be followed during the time
 that NMDA mechanisms are being defined.
 
 (a) Modules that require immediate support for the NMDA features
-SHOULD be structured for NMDA.  A temporary non-NMDA version of these
-models SHOULD exist, either an
+SHOULD be structured for NMDA.  A temporary non-NMDA version of
+this type of module MAY exist, either an
 existing model or a model created either by hand or with
 suitable tools that mirror the current modeling strategies.
 Both the NMDA and the non-NMDA modules SHOULD be published in
@@ -1989,7 +1989,7 @@ can advertise both the new NMDA module and the temporary non-NMDA module.
 A non-NMDA client can use separate "foo" and "foo-state" subtrees,
 except the "foo-state" subtree is located in a different (temporary) module.
 The NMDA module can be used by a non-NMDA client to access the
-conventional datastores, and the deprecated <get> operation to access
+conventional configuration datastores, and the deprecated <get> operation to access
 nested config=false data nodes.
 
 To create the temporary non-NMDA model from an NMDA model, the
@@ -2017,7 +2017,7 @@ and state subtrees, whenever possible.
 
     container foo {
       // configuration data child nodes
-      // operational value in operational datastore only
+      // operational value in operational state datastore only
       // may contain config=false nodes as needed
     }
  }
@@ -2052,7 +2052,7 @@ Converted NMDA Module:
 
     container foo {
       // configuration data child nodes
-      // operational value in operational datastore only
+      // operational value in operational state datastore only
       // may contain config=false nodes as needed
       // will contain any data nodes from old foo-state
     }
