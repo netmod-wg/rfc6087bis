@@ -1878,19 +1878,6 @@ It also prevents race conditions for retrieval of
 dynamic entries, and allows configuration and operational
 state to be retrieved together with minimal message overhead.
 
-Not NMDA-Compliant:
-
-   container foo {
-     ...
-   }
-
-   container foo-state {
-     config false;
-     ...
-   }
-
-NMDA-Compliant:
-
    container foo {
      ...
      // contains config=true and config=false nodes that have
