@@ -442,15 +442,15 @@ This document describes an HTTP-based protocol that provides a programmatic inte
 <author initials="L" surname="Berger" fullname="Lou Berger">
 <organization/>
 </author>
-<date month="June" day="13" year="2017"/>
+<date month="June" day="30" year="2017"/>
 <abstract>
 <t>
 This document captures the current syntax used in YANG module Tree Diagrams. The purpose of the document is to provide a single location for this definition. This syntax may be updated from time to time based on the evolution of the YANG language.
 </t>
 </abstract>
 </front>
-<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-00"/>
-<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-00.txt"/>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-01"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-01.txt"/>
 </reference>
 
 <reference anchor="I-D.ietf-netmod-revised-datastores">
