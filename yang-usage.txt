@@ -1937,7 +1937,8 @@ both current and new implementations.
 New modules and modules that are not concerned with the
 operational state of configuration information SHOULD
 immediately be structured to be NMDA-compatible, as
-described in ^combine-data^.
+described in ^combine-data^. This transition MAY be deferred
+if the module does not contain any configuration datastore objects.
 
 The remaining are options that MAY be followed during the time
 that NMDA mechanisms are being defined.
