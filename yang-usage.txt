@@ -335,7 +335,7 @@ Considerations section. The requirements for this section vary
 depending on what actions are required of the IANA. If there are no IANA
 considerations applicable to the document, then the IANA
 Considerations section stating that there are no actions is removed by
-the RFC Editor before publication. Refer to the guidelines in ^RFC5226^
+the RFC Editor before publication. Refer to the guidelines in ^RFC8126^
 for more details.
 
 Each normative YANG module MUST be registered in the
@@ -2380,6 +2380,7 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 - update tree diagram guidelines section
 - Change IANA template to list IESG instead of NETMOD WG as
 the Registrant
+- Update some references
 
 ** v13 to v14
 

@@ -245,21 +245,39 @@ This document describes the "tag" Uniform Resource Identifier (URI) scheme. Tag 
 </reference>
   <!-- end 4181 -->
 
-<reference anchor='RFC5226'>
+
+<reference anchor="RFC8126" target="https://www.rfc-editor.org/info/rfc8126">
 <front>
-<title>Guidelines for Writing an IANA Considerations Section in RFCs</title>
-<author initials='T.' surname='Narten' fullname='T. Narten'>
-<organization /></author>
-<author initials='H.' surname='Alvestrand' fullname='H. Alvestrand'>
-<organization /></author>
-<date year='2008' month='May' />
+<title>
+Guidelines for Writing an IANA Considerations Section in RFCs
+</title>
+<author initials="M." surname="Cotton" fullname="M. Cotton">
+<organization/>
+</author>
+<author initials="B." surname="Leiba" fullname="B. Leiba">
+<organization/>
+</author>
+<author initials="T." surname="Narten" fullname="T. Narten">
+<organization/>
+</author>
+<date year="2017" month="June"/>
 <abstract>
-<t>Many protocols make use of identifiers consisting of constants and other well-known values. Even after a protocol has been defined and deployment has begun, new values may need to be assigned (e.g., for a new option type in DHCP, or a new encryption or authentication transform for IPsec). To ensure that such quantities have consistent values and interpretations across all implementations, their assignment must be administered by a central authority. For IETF protocols, that role is provided by the Internet Assigned Numbers Authority (IANA).&lt;/t>&lt;t> In order for IANA to manage a given namespace prudently, it needs guidelines describing the conditions under which new values can be assigned or when modifications to existing values can be made. If IANA is expected to play a role in the management of a namespace, IANA must be given clear and concise instructions describing that role. This document discusses issues that should be considered in formulating a policy for assigning values to a namespace and provides guidelines for authors on the specific text that must be included in documents that place demands on IANA.&lt;/t>&lt;t> This document obsoletes RFC 2434. This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.</t></abstract></front>
-<seriesInfo name='BCP' value='26' />
-<seriesInfo name='RFC' value='5226' />
-<format type='TXT' octets='66160' target='http://www.rfc-editor.org/rfc/rfc5226.txt' />
+<t>
+Many protocols make use of points of extensibility that use constants to identify various protocol parameters. To ensure that the values in these fields do not have conflicting uses and to promote interoperability, their allocations are often coordinated by a central record keeper. For IETF protocols, that role is filled by the Internet Assigned Numbers Authority (IANA).
+</t>
+<t>
+To make assignments in a given registry prudently, guidance describing the conditions under which new values should be assigned, as well as when and how modifications to existing values can be made, is needed. This document defines a framework for the documentation of these guidelines by specification authors, in order to assure that the provided guidance for the IANA Considerations is clear and addresses the various issues that are likely in the operation of a registry.
+</t>
+<t>
+This is the third edition of this document; it obsoletes RFC 5226.
+</t>
+</abstract>
+</front>
+<seriesInfo name="BCP" value="26"/>
+<seriesInfo name="RFC" value="8126"/>
+<seriesInfo name="DOI" value="10.17487/RFC8126"/>
 </reference>
-  <!-- end 5226 -->
+<!-- end 8126 -->
 
 <reference anchor='RFC6087'>
 <front>
@@ -442,15 +460,15 @@ This document describes an HTTP-based protocol that provides a programmatic inte
 <author initials="L" surname="Berger" fullname="Lou Berger">
 <organization/>
 </author>
-<date month="June" day="30" year="2017"/>
+<date month="October" day="25" year="2017"/>
 <abstract>
 <t>
 This document captures the current syntax used in YANG module Tree Diagrams. The purpose of the document is to provide a single location for this definition. This syntax may be updated from time to time based on the evolution of the YANG language.
 </t>
 </abstract>
 </front>
-<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-01"/>
-<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-01.txt"/>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-02"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-02.txt"/>
 </reference>
 
 <reference anchor="I-D.ietf-netmod-revised-datastores">
@@ -471,15 +489,15 @@ This document captures the current syntax used in YANG module Tree Diagrams. The
 <author initials="R" surname="Wilton" fullname="Robert Wilton">
 <organization/>
 </author>
-<date month="August" day="24" year="2017"/>
+<date month="November" day="29" year="2017"/>
 <abstract>
 <t>
 Datastores are a fundamental concept binding the data models written in the YANG data modeling language to network management protocols such as NETCONF and RESTCONF. This document defines an architectural framework for datastores based on the experience gained with the initial simpler model, addressing requirements that were not well supported in the initial model.
 </t>
 </abstract>
 </front>
-<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-revised-datastores-04"/>
-<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-revised-datastores-04.txt"/>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-revised-datastores-07"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-revised-datastores-07.txt"/>
 </reference>
 
 
