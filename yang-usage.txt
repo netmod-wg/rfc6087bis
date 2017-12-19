@@ -225,8 +225,9 @@ the YANG tree diagram syntax MUST be present, containing the following text:
 
 YANG tree diagrams provide a concise representation of a YANG
 module, and SHOULD be included to help readers understand
-YANG module structure. Tree diagrams MAY be split into sections
-to correspond to document structure.
+YANG module structure. Guidelines on tree diagrams can be
+found in Section 3 of ^I-D.ietf-netmod-yang-tree-diagrams^.
+
 
 The following example shows a simple YANG tree diagram:
 
@@ -242,19 +243,19 @@ The following example shows a simple YANG tree diagram:
          +--ro type               string
 
 
-The 'pyang' compiler can be used to produce the tree diagram,
-using the '-f tree' command line parameter.
-
-If the YANG module is comprised of groupings only, then the
-tree diagram SHOULD contain the groupings.
-The 'pyang' compiler can be used to produce a tree diagram
-with groupings using the '-f tree --tree-print-groupings"
-command line parameters.
-
-If the YANG module contains notifications, then the
-tree diagram SHOULD contain the notifications.
-If the YANG module contains RPC statements, then the
-tree diagram SHOULD contain the RPC statements.
+#The 'pyang' compiler can be used to produce the tree diagram,
+#using the '-f tree' command line parameter.
+#
+#If the YANG module is comprised of groupings only, then the
+#tree diagram SHOULD contain the groupings.
+#The 'pyang' compiler can be used to produce a tree diagram
+#with groupings using the '-f tree --tree-print-groupings"
+#command line parameters.
+#
+#If the YANG module contains notifications, then the
+#tree diagram SHOULD contain the notifications.
+#If the YANG module contains RPC statements, then the
+#tree diagram SHOULD contain the RPC statements.
 
 ** Narrative Sections
 
@@ -2221,7 +2222,7 @@ by this document.
 
     URI: urn:ietf:params:xml:ns:yang:ietf-template
 
-    Registrant Contact: The NETMOD WG of the IETF.
+    Registrant Contact: The IESG.
 
     XML: N/A, the requested URI is an XML namespace.
 
@@ -2372,6 +2373,13 @@ The following changes have been made to the guidelines published in ^RFC6087^:
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+** v14 to v15
+
+- changed Intended status from Informational to BCP
+- update tree diagram guidelines section
+- Change IANA template to list IESG instead of NETMOD WG as
+the Registrant
 
 ** v13 to v14
 
@@ -2626,7 +2634,7 @@ A list of freely available tools and other information can be found at:
 {{document:
     name ;
     ipr trust200902;
-    category info;
+    category "bcp";
     obsoletes 6087;
     references yang-usage-back.xml;
     title "Guidelines for Authors and Reviewers of YANG Data Model Documents";
