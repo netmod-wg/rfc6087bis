@@ -14,8 +14,9 @@ YANG data model modules. This document obsoletes RFC 6087.
 * Introduction
 
 The standardization of network configuration interfaces for use
-with the Network Configuration Protocol ^RFC6241^
-and RESTCONF ^RFC8040^
+with network configuration management protocols,
+such as the Network Configuration Protocol ^RFC6241^
+and RESTCONF ^RFC8040^,
 requires a modular set of data models, which can be reused
 and extended over time.
 
@@ -23,25 +24,15 @@ This document defines a set of usage guidelines for
 Standards Track documents containing ^RFC7950^
 data models.  YANG is used to define
 the data structures, protocol operations, and notification content
-used within a NETCONF and/or RESTCONF server.  A server that supports a particular
+used within a NETCONF and/or RESTCONF server.
+A NETCONF or RESTCONF server that supports a particular
 YANG module will support client NETCONF and/or RESTCONF operation requests,
 as indicated by the specific content defined in the YANG module.
 
-This document is similar to
-the Structure of Management Information version 2 (SMIv2) usage guidelines
-specification ^RFC4181^ in intent and structure.
-However, since that document was written a decade after
-SMIv2 modules had been in use, it was published as a
-'Best Current Practice' (BCP).  This document is
-not a BCP, but rather an informational reference,
-intended to promote consistency in
-documents containing YANG modules.
-
 Many YANG constructs are defined as optional to use, such as
 the description statement.  However, in order to
-maximize interoperability of NETCONF and RESTCONF implementations
-utilizing YANG data models, it is desirable to
-define a set of usage guidelines that may require
+make YANG modules more useful,
+it is desirable to define a set of usage guidelines that entails
 a higher level of compliance than the minimum level
 defined in the YANG specification.
 
@@ -65,6 +56,36 @@ Note that this document is not a YANG tutorial and the reader
 is expected to know the YANG data modeling language before
 using this document.
 
+** Changes Since RFC 6087
+
+The following changes have been made to the guidelines published in ^RFC6087^:
+
+- Updated NETCONF reference from RFC 4741 to RFC 6241
+- Updated NETCONF over SSH citation from RFC 4742 to RFC 6242
+- Updated YANG Types reference from RFC 6021 to RFC 6991
+- Updated obsolete URLs for IETF resources
+- Changed top-level data node guideline
+- Clarified XPath usage for a literal value representing a YANG identity
+- Clarified XPath usage for a when-stmt
+- Clarified XPath usage for 'proceeding-sibling' and 'following-sibling' axes
+- Added terminology guidelines
+- Added YANG tree diagram guidelines
+- Updated XPath guidelines for type conversions and function library usage.
+- Updated data types section
+- Updated notifications section
+- Clarified conditional key leaf nodes
+- Clarify usage of 'uint64' and 'int64' data types
+- Added text on YANG feature usage
+- Added Identifier Naming Conventions
+- Clarified use of mandatory nodes with conditional augmentations
+- Clarified namespace and domain conventions for example modules
+- Clarified conventions for identifying code components
+- Added YANG 1.1 guidelines
+- Added Data Model Constraints section
+- Added mention of RESTCONF protocol
+- Added guidelines for NMDA Revised Datastores
+
+
 * Terminology
 
 ** Requirements Notation
@@ -72,7 +93,8 @@ using this document.
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
 "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
 and "OPTIONAL" in this document are to be interpreted as
-described in ^RFC2119^.
+described in BCP 14 ^RFC2119^ ^RFC8174^ when, and only when,
+they appear in all capitals, as shown here.
 
 RFC 2119 language is used here to express the views of the NETMOD
 working group regarding content for YANG modules.  YANG modules complying
@@ -141,12 +163,6 @@ of YANG statement usage.  The invalid syntax "..." is sometimes
 used to indicate that additional YANG statements would be
 present in a real YANG module.
 
-*** YANG Tree Diagrams @tree-diagrams@
-
-A simplified graphical representation of the data model is used in
-this document.  The meaning of the symbols in these diagrams is
-defined in ^I-D.ietf-netmod-yang-tree-diagrams^.
-
 
 * General Documentation Guidelines
 
@@ -214,12 +230,16 @@ e.g., "example-toaster".
 A terminology section MUST be present if any terms are defined
 in the document or if any terms are imported from other documents.
 
-If YANG tree diagrams are used, then a sub-section explaining
-the YANG tree diagram syntax MUST be present, containing the following text:
+If YANG tree diagrams are used, then a normative reference
+to the YANG tree diagrams specification MUST be provided
+for each diagram. (Refer to the example in the next section.)
 
-  A simplified graphical representation of the data model is used in
-  this document.  The meaning of the symbols in these diagrams is
-  defined in [I-D.ietf-netmod-yang-tree-diagrams].
+#If YANG tree diagrams are used, then a sub-section explaining
+#the YANG tree diagram syntax MUST be present, containing the following text:
+#
+#  A simplified graphical representation of the data model is used in
+#  this document.  The meaning of the symbols in these diagrams is
+#  defined in [I-D.ietf-netmod-yang-tree-diagrams].
 
 ** Tree Diagrams
 
@@ -228,8 +248,8 @@ module, and SHOULD be included to help readers understand
 YANG module structure. Guidelines on tree diagrams can be
 found in Section 3 of ^I-D.ietf-netmod-yang-tree-diagrams^.
 
-
-The following example shows a simple YANG tree diagram:
+The following example shows a simple YANG tree diagram
+^I-D.ietf-netmod-yang-tree-diagrams^:
 
    +--rw top-level-config-container
    |  +--rw config-list* [key-name]
@@ -306,8 +326,9 @@ This section MUST be patterned after the latest approved
 template (available at
 http://trac.tools.ietf.org/area/ops/trac/wiki/yang-security-guidelines).
 ^sec-template^ contains the security considerations template dated
-2013-05-08.  Authors MUST check the WEB page at the URL listed above
-in case there is a more recent version available.
+2013-05-08 and last updated 2017-12-21.  Authors MUST check the WEB
+page at the URL listed above in case there is a more recent version
+available.
 
 In particular:
 
@@ -325,6 +346,65 @@ harmful to system behavior or that raise significant
 privacy concerns MUST be explicitly listed by name and
 the reasons for the sensitivity/privacy concerns
 MUST be explained.
+
+
+*** Security Considerations Section Template @sec-template@
+
+
+X.  Security Considerations
+
+
+The YANG module specified in this document defines a schema for data that
+is designed to be accessed via network management protocols such as
+NETCONF [RFC6241] or RESTCONF [RFC8040]. The lowest NETCONF layer is
+the secure transport layer, and the mandatory-to-implement secure
+transport is Secure Shell (SSH) [RFC6242]. The lowest RESTCONF layer
+is HTTPS, and the mandatory-to-implement secure transport is TLS [RFC5246].
+
+The NETCONF access control model [RFC6536] provides the means to restrict
+access for particular NETCONF or RESTCONF users to a preconfigured subset
+of all available NETCONF or RESTCONF protocol operations and content.
+
+ -- if you have any writeable data nodes (those are all the
+ -- "config true" nodes, and remember, that is the default)
+ -- describe their specific sensitivity or vulnerability.
+
+There are a number of data nodes defined in this YANG module that are
+writable/creatable/deletable (i.e., config true, which is the default).
+These data nodes may be considered sensitive or vulnerable in some
+network environments. Write operations (e.g., edit-config) to these
+data nodes without proper protection can have a negative effect on
+network operations. These are the subtrees and data nodes and
+their sensitivity/vulnerability:
+
+<list subtrees and data nodes and state why they are sensitive>
+
+ -- for all YANG modules you must evaluate whether any readable data
+ -- nodes (those are all the "config false" nodes, but also all other
+ -- nodes, because they can also be read via operations like get or
+ -- get-config) are sensitive or vulnerable (for instance, if they
+ -- might reveal customer information or violate personal privacy
+ -- laws such as those of the European Union if exposed to
+ -- unauthorized parties)
+
+Some of the readable data nodes in this YANG module may be considered
+sensitive or vulnerable in some network environments. It is thus important
+to control read access (e.g., via get, get-config, or notification) to
+these data nodes. These are the subtrees and data nodes and their
+sensitivity/vulnerability:
+
+<list subtrees and data nodes and state why they are sensitive>
+
+ -- if your YANG module has defined any rpc operations
+ -- describe their specific sensitivity or vulnerability.
+
+Some of the RPC operations in this YANG module may be considered
+sensitive or vulnerable in some network environments. It is thus
+important to control access to these operations. These are the
+operations and their sensitivity/vulnerability:
+
+<list RPC operations and state why they are sensitive>
+
 
 ** IANA Considerations Section
 
@@ -2242,93 +2322,9 @@ or the YANG module template in ^YANGMOD^.
 
 This document defines documentation guidelines for
 NETCONF or RESTCONF content defined with the YANG data modeling
-language.  The guidelines for how to write a
-Security Considerations section for a YANG module
-are defined in the online document
-
-http://trac.tools.ietf.org/area/ops/trac/wiki/yang-security-guidelines
-
-This document does not introduce
+language, and therefore does not introduce
 any new or increased security risks into
 the management system.
-
-The following section contains the security considerations
-template dated 2010-06-16.  Be sure to check the webpage
-at the URL listed above in case there is a more recent
-version available.
-
-Each specification that defines one or more YANG
-modules MUST contain a section that discusses
-security considerations relevant to those modules.
-This section MUST be patterned after the latest
-approved template (available at
-
- http://www.ops.ietf.org/netconf/yang-security-considerations.txt).
-
-In particular, writable data nodes that could
-be especially disruptive if abused MUST be
-explicitly listed by name and the associated
-security risks MUST be spelled out.
-
-Similarly, readable data nodes that contain
-especially sensitive information or that raise
-significant privacy concerns MUST be explicitly
-listed by name and the reasons for the
-sensitivity/privacy concerns MUST be explained.
-
-Further, if new RPC operations have been defined,
-then the security considerations of each new
-RPC operation MUST be explained.
-
-** Security Considerations Section Template @sec-template@
-
-
-X.  Security Considerations
-
-The YANG module defined in this memo is designed to be accessed
-via the NETCONF protocol ^RFC6241^.  The lowest NETCONF layer is
-the secure transport layer and the mandatory-to-implement secure
-transport is SSH ^RFC6242^.
-
- -- if you have any writable data nodes (those are all the
- -- "config true" nodes, and remember, that is the default)
- -- describe their specific sensitivity or vulnerability.
-
-There are a number of data nodes defined in this YANG module
-which are writable/creatable/deletable (i.e., config true, which
-is the default).  These data nodes may be considered sensitive
-or vulnerable in some network environments.  Write operations
-(e.g., edit-config) to these data nodes without proper protection
-can have a negative effect on network operations.  These are
-the subtrees and data nodes and their sensitivity/vulnerability:
-
- <list subtrees and data nodes and state why they are sensitive>
-
- -- for all YANG modules you must evaluate whether any readable data
- -- nodes (those are all the "config false" nodes, but also all other
- -- nodes, because they can also be read via operations like get or
- -- get-config) are sensitive or vulnerable (for instance, if they
- -- might reveal customer information or violate personal privacy
- -- laws such as those of the European Union if exposed to
- -- unauthorized parties)
-
-Some of the readable data nodes in this YANG module may be
-considered sensitive or vulnerable in some network environments.
-It is thus important to control read access (e.g., via get,
-get-config, or notification) to these data nodes.  These are the
-subtrees and data nodes and their sensitivity/vulnerability:
-
- <list subtrees and data nodes and state why they are sensitive>
-
- -- if your YANG module has defined any rpc operations
- -- describe their specific sensitivity or vulnerability.
-
-Some of the RPC operations in this YANG module may be considered
-sensitive or vulnerable in some network environments.  It is thus
-important to control access to these operations.  These are the
-operations and their sensitivity/vulnerability:
-
- <list RPC operations and state why they are sensitive>
 
 * Acknowledgments
 
@@ -2339,40 +2335,16 @@ The working group thanks Martin Bjorklund, Juergen
 Schoenwaelder, Ladislav Lhotka, Jernej Tuljak, and Lou Berger for their
 extensive reviews and contributions to this document.
 
-* Changes Since RFC 6087
-
-The following changes have been made to the guidelines published in ^RFC6087^:
-
-- Updated NETCONF reference from RFC 4741 to RFC 6241
-- Updated NETCONF over SSH citation from RFC 4742 to RFC 6242
-- Updated YANG Types reference from RFC 6021 to RFC 6991
-- Updated obsolete URLs for IETF resources
-- Changed top-level data node guideline
-- Clarified XPath usage for a literal value representing a YANG identity
-- Clarified XPath usage for a when-stmt
-- Clarified XPath usage for 'proceeding-sibling' and 'following-sibling' axes
-- Added terminology guidelines
-- Added YANG tree diagram definition and guideline
-- Updated XPath guidelines for type conversions and function library usage.
-- Updated data types section
-- Updated notifications section
-- Clarified conditional key leaf nodes
-- Clarify usage of 'uint64' and 'int64' data types
-- Added text on YANG feature usage
-- Added Identifier Naming Conventions
-- Clarified use of mandatory nodes with conditional augmentations
-- Clarified namespace and domain conventions for example modules
-- Clarified conventions for identifying code components
-- Added YANG 1.1 guidelines
-- Added Data Model Constraints section
-- Added mention of RESTCONF protocol
-- Added guidelines for NMDA Revised Datastores
-
 *! start-appendix
 
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+** v15 to v16
+
+- address document shephard comments posted 2018-01-15
+- add yang-version to template module
 
 ** v14 to v15
 
@@ -2501,7 +2473,7 @@ All issues from the issue tracker have been addressed.
   https://github.com/netmod-wg/rfc6087bis/issues
 
 - Issue 1: Tree Diagrams:
-Added ^tree-diagrams^ so RFCs with YANG modules can use an
+Added 'tree-diagrams' section so RFCs with YANG modules can use an
 Informative reference to this RFC for tree diagrams.
 Updated guidelines to reference this RFC when tree diagrams are used
 

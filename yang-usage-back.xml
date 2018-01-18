@@ -104,6 +104,30 @@ specifications of each URI scheme.
 </reference>
   <!-- end 3986 -->
 
+
+  <reference anchor="RFC5246" target="https://www.rfc-editor.org/info/rfc5246">
+<front>
+<title>
+The Transport Layer Security (TLS) Protocol Version 1.2
+</title>
+<author initials="T." surname="Dierks" fullname="T. Dierks">
+<organization/>
+</author>
+<author initials="E." surname="Rescorla" fullname="E. Rescorla">
+<organization/>
+</author>
+<date year="2008" month="August"/>
+<abstract>
+<t>
+This document specifies Version 1.2 of the Transport Layer Security (TLS) protocol. The TLS protocol provides communications security over the Internet. The protocol allows client/server applications to communicate in a way that is designed to prevent eavesdropping, tampering, or message forgery. [STANDARDS-TRACK]
+</t>
+</abstract>
+</front>
+<seriesInfo name="RFC" value="5246"/>
+<seriesInfo name="DOI" value="10.17487/RFC5246"/>
+</reference>
+<!-- end RFC 5246 -->
+
 <reference anchor='RFC5378'>
 <front>
 <title>Rights Contributors Provide to the IETF Trust</title>
@@ -157,20 +181,26 @@ YANG is a data modeling language used to model configuration data, state data, R
 
 
 
-<reference anchor='RFC6991'>
+<reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174">
 <front>
-<title>Common YANG Data Types</title>
-<author initials='J.' surname='Schoenwaelder' fullname='J. Schoenwaelder'>
-<organization /></author>
-<date year='2013' month='July' />
+<title>
+Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words
+</title>
+<author initials="B." surname="Leiba" fullname="B. Leiba">
+<organization/>
+</author>
+<date year="2017" month="May"/>
 <abstract>
-<t>This document introduces a collection of common data types to be used with the YANG data modeling language.  This document obsoletes RFC 6021.</t></abstract></front>
-<seriesInfo name='RFC' value='6991' />
-<format type='TXT' octets='60242' target='http://www.rfc-editor.org/rfc/rfc6991.txt' />
+<t>
+RFC 2119 specifies common key words that may be used in protocol specifications. This document aims to reduce the ambiguity by clarifying that only UPPERCASE usage of the key words have the defined special meanings.
+</t>
+</abstract>
+</front>
+<seriesInfo name="BCP" value="14"/>
+<seriesInfo name="RFC" value="8174"/>
+<seriesInfo name="DOI" value="10.17487/RFC8174"/>
 </reference>
-  <!-- end 6991 -->
-
-
+<!-- end RFC 8174 -->
 
 
 <reference anchor="W3C.REC-xpath-19991116" target="http://www.w3.org/TR/1999/REC-xpath-19991116">
@@ -188,6 +218,7 @@ YANG is a data modeling language used to model configuration data, state data, R
       <format type="HTML" target="http://www.w3.org/TR/1999/REC-xpath-19991116"/>
 </reference>
   <!-- end XPath -->
+
 
 </references>
 
@@ -404,6 +435,21 @@ This document describes the fundamental and unique style conventions and editori
 <seriesInfo name="DOI" value="10.17487/RFC7322"/>
 </reference>
 
+
+<reference anchor='RFC6991'>
+<front>
+<title>Common YANG Data Types</title>
+<author initials='J.' surname='Schoenwaelder' fullname='J. Schoenwaelder'>
+<organization /></author>
+<date year='2013' month='July' />
+<abstract>
+<t>This document introduces a collection of common data types to be used with the YANG data modeling language.  This document obsoletes RFC 6021.</t></abstract></front>
+<seriesInfo name='RFC' value='6991' />
+<format type='TXT' octets='60242' target='http://www.rfc-editor.org/rfc/rfc6991.txt' />
+</reference>
+  <!-- end 6991 -->
+
+
 <reference anchor="RFC7841" target="http://www.rfc-editor.org/info/rfc7841">
 <front>
 <title>RFC Streams, Headers, and Boilerplates</title>
@@ -460,15 +506,15 @@ This document describes an HTTP-based protocol that provides a programmatic inte
 <author initials="L" surname="Berger" fullname="Lou Berger">
 <organization/>
 </author>
-<date month="October" day="25" year="2017"/>
+<date month="December" day="21" year="2017"/>
 <abstract>
 <t>
 This document captures the current syntax used in YANG module Tree Diagrams. The purpose of the document is to provide a single location for this definition. This syntax may be updated from time to time based on the evolution of the YANG language.
 </t>
 </abstract>
 </front>
-<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-02"/>
-<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-02.txt"/>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-04"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-04.txt"/>
 </reference>
 
 <reference anchor="I-D.ietf-netmod-revised-datastores">
@@ -489,15 +535,15 @@ This document captures the current syntax used in YANG module Tree Diagrams. The
 <author initials="R" surname="Wilton" fullname="Robert Wilton">
 <organization/>
 </author>
-<date month="November" day="29" year="2017"/>
+<date month="January" day="12" year="2018"/>
 <abstract>
 <t>
 Datastores are a fundamental concept binding the data models written in the YANG data modeling language to network management protocols such as NETCONF and RESTCONF. This document defines an architectural framework for datastores based on the experience gained with the initial simpler model, addressing requirements that were not well supported in the initial model.
 </t>
 </abstract>
 </front>
-<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-revised-datastores-07"/>
-<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-revised-datastores-07.txt"/>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-revised-datastores-10"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-revised-datastores-10.txt"/>
 </reference>
 
 
