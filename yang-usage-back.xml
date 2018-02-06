@@ -506,16 +506,17 @@ This document describes an HTTP-based protocol that provides a programmatic inte
 <author initials="L" surname="Berger" fullname="Lou Berger">
 <organization/>
 </author>
-<date month="December" day="21" year="2017"/>
+<date month="January" day="22" year="2018"/>
 <abstract>
 <t>
 This document captures the current syntax used in YANG module Tree Diagrams. The purpose of the document is to provide a single location for this definition. This syntax may be updated from time to time based on the evolution of the YANG language.
 </t>
 </abstract>
 </front>
-<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-04"/>
-<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-04.txt"/>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-yang-tree-diagrams-05"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-yang-tree-diagrams-05.txt"/>
 </reference>
+
 
 <reference anchor="I-D.ietf-netmod-revised-datastores">
 <front>
@@ -546,6 +547,46 @@ Datastores are a fundamental concept binding the data models written in the YANG
 <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-revised-datastores-10.txt"/>
 </reference>
 
+<reference anchor="I-D.ietf-netmod-rfc8022bis">
+<front>
+<title>
+A YANG Data Model for Routing Management (NMDA Version)
+</title>
+<author initials="L" surname="Lhotka" fullname="Ladislav Lhotka">
+<organization/>
+</author>
+<author initials="A" surname="Lindem" fullname="Acee Lindem">
+<organization/>
+</author>
+<author initials="Y" surname="Qu" fullname="Yingzhen Qu">
+<organization/>
+</author>
+<date month="January" day="26" year="2018"/>
+<abstract>
+<t>
+This document contains a specification of three YANG modules and one submodule. Together they form the core routing data model that serves as a framework for configuring and managing a routing subsystem. It is expected that these modules will be augmented by additional YANG modules defining data models for control-plane protocols, route filters, and other functions. The core routing data model provides common building blocks for such extensions -- routes, Routing Information Bases (RIBs), and control-plane protocols. The YANG modules in this document conform to the Network Management Datastore Architecture (NMDA). This document obsoletes RFC 8022.
+</t>
+</abstract>
+</front>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-rfc8022bis-11"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-rfc8022bis-11.txt"/>
+</reference>
 
+<reference anchor="I-D.ietf-netmod-rfc7223bis">
+<front>
+<title>A YANG Data Model for Interface Management</title>
+<author initials="M" surname="Bjorklund" fullname="Martin Bjorklund">
+<organization/>
+</author>
+<date month="January" day="11" year="2018"/>
+<abstract>
+<t>
+This document defines a YANG data model for the management of network interfaces. It is expected that interface-type-specific data models augment the generic interfaces data model defined in this document. The data model includes definitions for configuration and system state (status information and counters for the collection of statistics). The YANG model in this document conforms to the Network Management Datastore Architecture defined in I-D.ietf-netmod-revised-datastores. This document obsoletes RFC 7223.
+</t>
+</abstract>
+</front>
+<seriesInfo name="Internet-Draft" value="draft-ietf-netmod-rfc7223bis-03"/>
+<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-netmod-rfc7223bis-03.txt"/>
+</reference>
 
 </references>
