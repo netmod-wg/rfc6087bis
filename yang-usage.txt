@@ -1542,6 +1542,11 @@ Note that the "mandatory" and "default" statements within
 a nested "choice" statement only apply if the "case" containing
 the nested "choice" statement is first selected.
 
+If a list defines any key leafs, then these leafs SHOULD be
+defined in order, as the first child nodes within the list.
+The key leafs MAY be in a different order in some cases, e.g.,
+they are defined in a grouping, not inline in the list statement.
+
 *** Non-Presence Containers
 
 A non-presence container is used to organize data into specific subtrees.
@@ -1920,17 +1925,20 @@ be set to "false".  Loose coupling is achieved by using key leafs with
 the same data type as the original data structure.  This has the same
 semantics as setting the "require-instance" sub-statement to "false".
 
-It is sometimes useful to separate configuration data and operational
-state, so that they do not not even share the exact same
-naming characteristics.  The correlation between configuration the
-operational state that is affected by changes in configuration
-is a complex problem. There may not be a simple 1:1 relationship
-between a configuration data node and an operational state node.
-Further work is needed in YANG to clarify this relationship.
-Protocol work may also be needed to allow a client to retrieve
-this type of information from a server.  At this time the
-best practice is to clearly document any relationship
-to other data structures in the "description" statement.
+The relationship between configuration and operational state has
+been clarified in NMDA ^I-D.ietf-netmod-revised-datastores^.
+
+#It is sometimes useful to separate configuration data and operational
+#state, so that they do not not even share the exact same
+#naming characteristics.  The correlation between configuration the
+#operational state that is affected by changes in configuration
+#is a complex problem. There may not be a simple 1:1 relationship
+#between a configuration data node and an operational state node.
+#Further work is needed in YANG to clarify this relationship.
+#Protocol work may also be needed to allow a client to retrieve
+#this type of information from a server.  At this time the
+#best practice is to clearly document any relationship
+#to other data structures in the "description" statement.
 
 *** Use of Leafref for Key Correlation
 
@@ -1995,7 +2003,8 @@ was considered to be operational state. This data was not considered to
 be part of any datastore, which made YANG XPath definition much more
 complicated.
 
-Operational state is now modeled using YANG according to new NMDA,
+Operational state is now modeled using YANG according to the new NMDA
+^I-D.ietf-netmod-revised-datastores^,
 and is now conceptually contained in the operational state datastore,
 which also includes the operational values of configuration data.
 There is no longer any need to duplicate data structures
@@ -2248,18 +2257,18 @@ Only the modules imported by a particular module can be assumed
 to be present in an implementation.
 An open system MAY include any combination of YANG modules.
 
-** YANG 1.1 Guidelines
+** Guidelines for YANG 1.1 Specific Constructs
 
 The set of YANG 1.1 guidelines will grow as operational experience is gained
 with the new language features. This section contains an initial set
-of guidelines.
+of guidelines for new YANG 1.1 language features.
 
 *** Importing Multiple Revisions
 
 Standard modules SHOULD NOT import multiple revisions of the same module
-into a module.  This MAY be done if the authors can demonstrate that
-the "avoided" definitions from the most recent of the multiple revisions are somehow
-broken or harmful to interoperability.
+into a module.  This MAY be done if independent definitions (e.g.
+enumeration typedefs) from specific revisions are needed in the
+importing module.
 
 *** Using Feature Logic
 
@@ -2297,11 +2306,11 @@ For example, a "reset" action defined with a data node definition
 for an interface might have different parameters than for a power supply
 or a VLAN. The same action name SHOULD be used to represent similar semantics.
 
-The NETCONF Access Control Model (NACM) ^RFC6536^ does not support
-parameter access control for RPC operations.  The user is given
-permission (or not) to invoke the RPC operation with any parameters.
-For example, if each client is only allowed to reset their own interface,
-then NACM cannot be used.
+The NETCONF Access Control Model (NACM) ^I-D.ietf-netconf-rfc6536bis^
+does not support parameter access control for RPC operations.
+The user is given permission (or not) to invoke the RPC operation with
+any parameters. For example, if each client is only allowed to reset their
+own interface, then NACM cannot be used.
 
 For example, NACM cannot enforce access access control based on the value
 of the "interface" parameter, only the "reset" operation itself:
@@ -2396,6 +2405,15 @@ extensive reviews and contributions to this document.
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+** v17 to v18
+
+- address Area Director review comments Part 2
+- clarify preferred list key order
+
+** v16 to v17
+
+- address Area Director review comments Part 1
 
 ** v15 to v16
 
@@ -2616,11 +2634,12 @@ for the following IANA registries:
 
    YANG Module Registry: Register the YANG module name, prefix,
       namespace, and RFC number, according to the rules specified
-      in [RFC7950].
+      in [RFC6020].
 
 - References -- verify that the references are properly divided
-between normative and informative references, that RFC 2119 is
-included as a normative reference if the terminology defined therein
+between normative and informative references, that RFC 2119 and
+RFC 8174 are
+included as normative references if the terminology defined therein
 is used in the document, that all references required by the
 boilerplate are present, that all YANG modules containing imported
 items are cited as normative references, and that all citations point
@@ -2629,7 +2648,9 @@ otherwise (for example, it is OK to include an informative reference
 to a previous version of a specification to help explain a feature
 included for backward compatibility).  Be sure citations for all
 imported modules are present somewhere in the document
-text (outside the YANG module).
+text (outside the YANG module). If a YANG module contains reference
+or description statements that refer to an Internet Draft (I-D),
+then the I-D is included as an Informative Reference.
 
 - License -- verify that the draft contains the Simplified BSD
 License in each YANG module or submodule. Some guidelines
