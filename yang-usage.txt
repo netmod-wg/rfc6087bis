@@ -201,7 +201,7 @@ The module description statement MUST contain a reference to
 the latest approved IETF Trust Copyright statement,
 which is available online at:
 
-    http://trustee.ietf.org/license-info/
+    https://trustee.ietf.org/license-info/
 
 ** Code Components
 
@@ -216,7 +216,7 @@ The name string form that includes the revision-date SHOULD be used.
 The revision date MUST match the date used in the most recent revision
 of the module.
 
-The following example is for the '2010-01-18' revision
+The following example is for the '2016-03-20' revision
 of the 'ietf-foo' module:
 
 !! include-figure ietf-foo.yang  extract-to="ietf-foo@2016-03-20.yang"
@@ -341,7 +341,7 @@ modules.
 
 This section MUST be patterned after the latest approved
 template (available at
-http://trac.tools.ietf.org/area/ops/trac/wiki/yang-security-guidelines).
+https://trac.tools.ietf.org/area/ops/trac/wiki/yang-security-guidelines).
 ^sec-template^ contains the security considerations template dated
 2013-05-08 and last updated 2017-12-21.  Authors MUST check the WEB
 page at the URL listed above in case there is a more recent version
@@ -426,12 +426,12 @@ operations and their sensitivity/vulnerability:
 ** IANA Considerations Section
 
 In order to comply with IESG policy as set forth in
-http://www.ietf.org/id-info/checklist.html, every Internet-Draft that is
+https://www.ietf.org/id-info/checklist.html, every Internet-Draft that is
 submitted to the IESG for publication MUST contain an IANA
 Considerations section. The requirements for this section vary
 depending on what actions are required of the IANA. If there are no IANA
 considerations applicable to the document, then the IANA
-Considerations section stating that there are no actions is removed by
+Considerations section stating that there are no actions might be removed by
 the RFC Editor before publication. Refer to the guidelines in ^RFC8126^
 for more details.
 
@@ -592,21 +592,21 @@ from multiple modules to be used, even if the names are not unique.
 In the example below, the identifier "foo" is used in all 3 modules:
 
     module example-foo {
-      namespace "http://example.com/ns/foo";
+      namespace "tag:example.com,2017:example-foo";
       prefix f;
 
       container foo;
     }
 
     module example-bar {
-      namespace "http://example.com/ns/bar";
+      namespace "tag:example.com,2017:example-bar";
       prefix b;
 
       typedef foo { type uint32; }
     }
 
     module example-one {
-      namespace "http://example.com/ns/one";
+      namespace "tag:example.com,2017:example-one";
       prefix one;
       import example-foo { prefix f; }
       import example-bar { prefix b; }
@@ -1134,13 +1134,14 @@ modules. The string SHOULD be selected according to the guidelines in ^RFC7950^.
 
 The following URIs exemplify what might be used by non Standards
 Track modules.  Note that the domain "example.com" SHOULD be used
-by example modules in IETF drafts.
+by example modules in IETF drafts. These URIs are not intended to
+be de-referenced. They are used for module namespace identification only.
 
 Example URIs using URLs per RFC 3986 ^RFC3986^:
 
-    http://example.com/ns/example-interfaces
+    https://example.com/ns/example-interfaces
 
-    http://example.com/ns/example-system
+    https://example.com/ns/example-system
 
 Example URIs using tags per RFC 4151 ^RFC4151^:
 
@@ -1787,7 +1788,7 @@ never select this type, and therefore not be adding
 a mandatory data node.
 
   module example-module {
-    namespace "http://example.com/ns/example-module";
+    namespace "tag:example.com,2017:example-module";
     prefix mymod;
 
     import iana-if-type { prefix iana; }
@@ -2251,8 +2252,6 @@ are generally more expensive than if "require-instance" is set to false
 
 ** Open Systems Considerations
 
-A YANG module MUST NOT be designed such that the set of modules
-found on a server implementation can be predetermined in advance.
 Only the modules imported by a particular module can be assumed
 to be present in an implementation.
 An open system MAY include any combination of YANG modules.
@@ -2604,13 +2603,13 @@ an Internet-Draft:
 
 - I-D Boilerplate -- verify that the draft contains the required
 Internet-Draft boilerplate (see
-http://www.ietf.org/id-info/guidelines.html), including the
+https://www.ietf.org/id-info/guidelines.html), including the
 appropriate statement to permit publication as an RFC, and that
 I-D boilerplate does not contain references or section numbers.
 
 - Abstract -- verify that the abstract does not contain references,
 that it does not have a section number, and that its content follows
-the guidelines in http://www.ietf.org/id-info/guidelines.html.
+the guidelines in https://www.ietf.org/id-info/guidelines.html.
 
 - Copyright Notice -- verify that the draft has the appropriate
 text regarding the rights that document contributers provide to
@@ -2618,11 +2617,11 @@ the IETF Trust ^RFC5378^.  Verify that it contains the
 full IETF Trust copyright notice at the beginning of the document.
 The IETF Trust Legal Provisions (TLP) can be found at:
 
-   http://trustee.ietf.org/license-info/
+   https://trustee.ietf.org/license-info/
 
 - Security Considerations section -- verify that the draft uses the
 latest approved template from the OPS area website
-(http://trac.tools.ietf.org/area/ops/trac/wiki/yang-security-guidelines)
+(https://trac.tools.ietf.org/area/ops/trac/wiki/yang-security-guidelines)
 and that the guidelines therein have been followed.
 
 - IANA Considerations section -- this section must always be
@@ -2661,10 +2660,10 @@ copyright dates.  Use
 the approved text from the latest Trust Legal Provisions (TLP)
 document, which can be found at:
 
-   http://trustee.ietf.org/license-info/
+   https://trustee.ietf.org/license-info/
 
 - Other Issues -- check for any issues mentioned
-in http://www.ietf.org/id-info/checklist.html
+in https://www.ietf.org/id-info/checklist.html
 that are not covered elsewhere.
 
 - Technical Content -- review the actual technical content for
@@ -2672,7 +2671,7 @@ compliance with the guidelines in this document.  The use of a YANG
 module compiler is recommended when checking for syntax errors.
 A list of freely available tools and other information can be found at:
 
-   http://trac.tools.ietf.org/wg/netconf/trac/wiki
+   https://trac.tools.ietf.org/wg/netconf/trac/wiki
 
    Checking for correct syntax, however, is only part of the job.
    It is just as important to actually read the YANG module document
