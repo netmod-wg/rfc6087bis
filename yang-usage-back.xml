@@ -249,6 +249,18 @@ Datastores are a fundamental concept binding the data models written in the YANG
 </reference>
 
 
+<reference anchor="ID-Guidelines"
+           target="https://www.ietf.org/standards/ids/guidelines/">
+<front>
+<title>Guidelines to Authors of Internet-Drafts</title>
+<author initials="R." surname="Housley" fullname="R. Housley" role="editor">
+<organization/>
+</author>
+<date year="2010" month="December"/>
+</front>
+</reference>
+
+
 </references>
 
 <references title="Informative References">

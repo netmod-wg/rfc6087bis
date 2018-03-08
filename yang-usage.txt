@@ -1,10 +1,9 @@
 # -*- outline -*-
 
 This memo provides guidelines for authors and reviewers
-of Standards Track specifications containing YANG
-data model modules.   Applicable
-portions may be used as a basis for reviews of other
-YANG data model documents.  Recommendations and
+of specifications containing YANG
+data model modules.
+Recommendations and
 procedures are defined, which are intended to
 increase interoperability and usability
 of Network Configuration Protocol (NETCONF)
@@ -21,7 +20,7 @@ requires a modular set of data models, which can be reused
 and extended over time.
 
 This document defines a set of usage guidelines for
-Standards Track documents containing YANG 1.1 ^RFC7950^
+documents containing YANG 1.1 ^RFC7950^
 and YANG 1.0 ^RFC6020^ data models.  YANG is used to define
 the data structures, protocol operations, and notification content
 used within a NETCONF and/or RESTCONF server.
@@ -96,10 +95,10 @@ and "OPTIONAL" in this document are to be interpreted as
 described in BCP 14 ^RFC2119^ ^RFC8174^ when, and only when,
 they appear in all capitals, as shown here.
 
-RFC 2119 language is used here to express the views of the NETMOD
-working group regarding content for YANG modules.  YANG modules complying
-with this document will treat the RFC 2119 terminology as if it were
-describing best current practices.
+#RFC 2119 language is used here to express the views of the NETMOD
+#working group regarding content for YANG modules.  YANG modules complying
+#with this document will treat the RFC 2119 terminology as if it were
+#describing best current practices.
 
 ** NETCONF Terms
 
@@ -169,8 +168,8 @@ of a YANG module, as defined in
 * General Documentation Guidelines
 
 YANG data model modules under review are likely to be contained in
-Internet-Drafts.  All guidelines for Internet-Draft authors MUST be
-followed.  The RFC Editor provides guidelines for authors of RFCs,
+Internet-Drafts.  All guidelines for Internet-Draft authors ^ID-Guidelines^
+MUST be followed.  The RFC Editor provides guidelines for authors of RFCs,
 which are first published as Internet-Drafts.  These guidelines
 should be followed and are defined in ^RFC7322^ and updated in ^RFC7841^
 and "RFC Document Style" ^RFC-STYLE^.
@@ -298,13 +297,14 @@ an example of this overview section.
 
 If the documents contains YANG module(s) that are compliant
 with the Network Management Datastore Architecture
-(NMDA) ^I-D.ietf-netmod-revised-datastores^, then the Abstract
-and Introduction sections should mention this fact.
+(NMDA) ^I-D.ietf-netmod-revised-datastores^, then the
+Introduction section should mention this fact.
 
 Example:
 
-  The YANG model in this document conforms to the Network Management
-  Datastore Architecture defined in I-D.ietf-netmod-revised-datastores.
+  The YANG model in this document conforms to the Network
+  Management Datastore Architecture defined in
+  [I-D.ietf-netmod-revised-datastores].
 
 
 ** Definitions Section @def-section@
@@ -320,9 +320,10 @@ A YIN syntax version of the module MAY also be present in the document.
 There MAY also be other types of modules present in the document,
 such as SMIv2, which are not affected by these guidelines.
 
-Note that all YANG statements within a YANG module are considered
-normative, if the module itself is considered normative,
-and not an example module or example YANG fragment.
+Note that if the module itself is considered normative and not an example
+module or example YANG fragment,
+then all YANG statements within a YANG module are considered
+normative.
 The use of keywords defined in ^RFC2119^
 apply to YANG description statements in normative modules
 exactly as they would in any other normative section.
@@ -341,7 +342,7 @@ modules.
 
 This section MUST be patterned after the latest approved
 template (available at
-https://trac.tools.ietf.org/area/ops/trac/wiki/yang-security-guidelines).
+https://trac.ietf.org/trac/ops/wiki/yang-security-guidelines).
 ^sec-template^ contains the security considerations template dated
 2013-05-08 and last updated 2017-12-21.  Authors MUST check the WEB
 page at the URL listed above in case there is a more recent version
@@ -466,7 +467,7 @@ to use the latest revision of the submodule.
 
 For every import or include statement that appears in a
 module contained
-in the specification, which identifies a module in a separate document,
+in the specification, that identifies a module in a separate document,
 a corresponding normative reference to that document MUST
 appear in the Normative References section.  The reference MUST
 correspond to the specific module version actually used within
@@ -474,12 +475,12 @@ the specification.
 
 For every normative reference statement that appears
 in a module contained
-in the specification, which identifies a separate document,
+in the specification, that identifies a separate document,
 a corresponding normative reference to that document SHOULD
 appear in the Normative References section.  The reference SHOULD
 correspond to the specific document version actually used within
 the specification.  If the reference statement identifies an
-informative reference, which identifies a separate document,
+informative reference, that identifies a separate document,
 a corresponding informative reference to that document MAY
 appear in the Informative References section.
 
@@ -617,7 +618,7 @@ In the example below, the identifier "foo" is used in all 3 modules:
     }
 
 YANG defines the following rules for prefix usage:
-- Prefixes are never allowed for built in data types and YANG keywords.
+- Prefixes are never used for built in data types and YANG keywords.
 - A prefix MUST be used for any external statement (i.e., a statement
 defined with the YANG "extension" statement)
 - The proper module prefix MUST be used for all identifiers imported from
@@ -648,9 +649,11 @@ token in the ABNF in Section 13 of ^RFC7950^.
 Identifiers SHOULD follow a consistent naming pattern
 throughout the module.  Only lower-case letters, numbers,
 and dashes SHOULD be used in identifier names.
-Upper-case characters and the underscore character MAY be used
+Upper-case characters, the period character,
+and the underscore character MAY be used
 if the identifier represents a well-known value that
-uses these characters.
+uses these characters. YANG does not permit any other characters
+in YANG identifiers.
 
 Identifiers SHOULD include complete words and/or well-known
 acronyms or abbreviations.  Child nodes within a container
@@ -1045,7 +1048,7 @@ The contact statement MUST be present.
 If the module is contained in a document
 intended for Standards Track status, then
 the working group web and mailing information
-MUST be present, and the main document author or
+SHOULD be present, and the main document author or
 editor contact information SHOULD be present.
 If additional authors or editors exist,
 their contact information MAY be present.
@@ -1077,19 +1080,56 @@ and operators to know how to find the
 original source document in a consistent manner.
 The revision statement MAY have a description substatement.
 
-It is not required to keep the full revision history of draft versions
-(e.g., modules contained within Internet-Drafts).
+The following example shows the revision statement for
+a published YANG module:
+
+
+   revision "2012-02-22" {
+     description
+       "Initial version";
+     reference
+       "RFC 6536: Network Configuration Protocol (NETCONF)
+                  Access Control Model";
+   }
+
+
+For an unpublished module, a complete history of
+each unpublished module revision is not required.
 That is, within a sequence of draft versions, only the most recent
 revision need be recorded in the module.
-However, whenever a new (i.e. changed) version is made available
-(e.g., via a new version of an Internet-Draft),
-the revision date of that new version MUST be updated to a date
+Do not remove or reuse a revision statement for a published module.
+A new revision date is not required unless the module contents
+have changed. If the module contents have changed, then
+the revision date of that new module version MUST be updated to a date
 later than that of the previous version.
+
+The following example shows the two revision statements for
+an unpublished update to a published YANG module:
+
+
+   revision "2017-12-11" {
+     description
+       "Added support for YANG 1.1 actions and notifications tied to
+        data nodes. Clarify how NACM extensions can be used by other
+        data models.";
+     reference
+       "RFC XXXX: Network Configuration Protocol (NETCONF)
+                  Access Control Model";
+   }
+
+   revision "2012-02-22" {
+     description
+       "Initial version";
+     reference
+       "RFC 6536: Network Configuration Protocol (NETCONF)
+                  Access Control Model";
+   }
+
 
 ** Namespace Assignments @TEMPNS@
 
 It is RECOMMENDED that only valid YANG modules be
-included in documents, whether or not they are published yet.
+included in documents, whether or not the modules are published yet.
 This allows:
 
 - the module to compile correctly instead
@@ -1824,7 +1864,8 @@ the "iana-if-type" module.
 
 ** Deviation Statements
 
-The YANG "deviation" statement cannot appear in IETF YANG modules,
+Per RFC 7950, 7.20.3, the YANG "deviation" statement
+is not allowed to appear in IETF YANG modules,
 but it can be useful for documenting server capabilities.
 Deviation statements are not reusable and typically not shared across
 all platforms.
@@ -2306,7 +2347,7 @@ for an interface might have different parameters than for a power supply
 or a VLAN. The same action name SHOULD be used to represent similar semantics.
 
 The NETCONF Access Control Model (NACM) ^I-D.ietf-netconf-rfc6536bis^
-does not support parameter access control for RPC operations.
+does not support parameter-based access control for RPC operations.
 The user is given permission (or not) to invoke the RPC operation with
 any parameters. For example, if each client is only allowed to reset their
 own interface, then NACM cannot be used.
@@ -2404,6 +2445,10 @@ extensive reviews and contributions to this document.
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+** v18 to v19
+
+- address IESG ballot comments
 
 ** v17 to v18
 
