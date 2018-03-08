@@ -422,7 +422,8 @@ This document defines a YANG data model for the management of network interfaces
 </reference>
   <!-- end 7223 -->
 
-<reference anchor="RFC-STYLE" target="http://www.rfc-editor.org/rfc-style-guide/rfc-style">
+<reference anchor="RFC-STYLE"
+           target="http://www.rfc-editor.org/styleguide/">
         <front>
             <title>RFC Document Style</title>
             <author initials="R" surname="Braden">

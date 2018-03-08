@@ -247,35 +247,6 @@ to the YANG tree diagrams specification MUST be included
 in the document. Refer to Section 2.2 of ^I-D.ietf-netmod-rfc8022bis^
 for an example of such a reference.
 
-#The following example shows a simple YANG tree diagram
-#^I-D.ietf-netmod-yang-tree-diagrams^:
-#
-#   +--rw top-level-config-container
-#   |  +--rw config-list* [key-name]
-#   |     +--rw key-name                    string
-#   |     +--rw optional-parm?              string
-#   |     +--rw mandatory-parm              identityref
-#   |     +--ro read-only-leaf              string
-#   +--ro top-level-nonconfig-container
-#      +--ro nonconfig-list* [name]
-#         +--ro name               string
-#         +--ro type               string
-#
-#
-#The 'pyang' compiler can be used to produce the tree diagram,
-#using the '-f tree' command line parameter.
-#
-#If the YANG module is comprised of groupings only, then the
-#tree diagram SHOULD contain the groupings.
-#The 'pyang' compiler can be used to produce a tree diagram
-#with groupings using the '-f tree --tree-print-groupings"
-#command line parameters.
-#
-#If the YANG module contains notifications, then the
-#tree diagram SHOULD contain the notifications.
-#If the YANG module contains RPC statements, then the
-#tree diagram SHOULD contain the RPC statements.
-
 ** Narrative Sections
 
 The narrative part MUST include an overview section that describes
@@ -307,6 +278,19 @@ Example:
   [I-D.ietf-netmod-revised-datastores].
 
 
+Consistent indentation SHOULD be used for all examples,
+including YANG fragments and protocol message instance data.
+If line wrapping is done for formatting purposes, then this SHOULD
+be noted, as shown in the following example:
+
+   [note: '\' line wrapping for formatting only]
+
+   <myleaf xmlns="tag:example.com,2017:example-two">\
+     this is a long value so the line needs to wrap to stay\
+     within 72 characters\
+   </myleaf>
+
+
 ** Definitions Section @def-section@
 
 This section contains the module(s) defined by the specification.
@@ -330,7 +314,10 @@ exactly as they would in any other normative section.
 
 Example YANG modules and example YANG fragments
 MUST NOT contain any normative text,
-including any reserved words from ^RFC2119^.
+including any all-uppercase reserved words from ^RFC2119^.
+
+Consistent indentation and formatting SHOULD be used in all
+YANG statements within a module.
 
 See ^YangGuidelines^ for guidelines on YANG usage.
 
@@ -532,7 +519,8 @@ This includes example instance document snippets in an appropriate
 encoding (e.g., XML and/or JSON) to demonstrate
 the intended usage of the YANG module(s).  Example modules MUST be
 validated. Refer to ^modval^ for tools which validate YANG modules.
-
+If IP addresses are used, then either a mix of IPv4 and IPv6
+addresses or IPv6 addresses exclusively SHOULD be used in the examples.
 
 * YANG Usage Guidelines @YangGuidelines@
 
@@ -1616,7 +1604,11 @@ Example without container wrappers:
 
 
 Use of non-presence containers to organize data is a subjective matter
-similar to use of sub-directories in a file system.
+similar to use of sub-directories in a file system. Although these
+containers do not have any semantics, they can impact protocol
+operations for the descendant data nodes within a non-presence container,
+so use of these containers SHOULD be considered carefully.
+
 The NETCONF and RESTCONF protocols do not currently support the ability
 to delete all list (or leaf-list) entries at once. This deficiency
 is sometimes avoided by use of a parent container (i.e., deleting the
