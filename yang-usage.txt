@@ -171,8 +171,8 @@ YANG data model modules under review are likely to be contained in
 Internet-Drafts.  All guidelines for Internet-Draft authors ^ID-Guidelines^
 MUST be followed.  The RFC Editor provides guidelines for authors of RFCs,
 which are first published as Internet-Drafts.  These guidelines
-should be followed and are defined in ^RFC7322^ and updated in ^RFC7841^
-and "RFC Document Style" ^RFC-STYLE^.
+should be followed and are defined in ^RFC7322^ and updated in ^RFC7841^,
+"RFC Document Style" ^RFC-STYLE^, and ^I-D.flanagan-7322bis^.
 
 The following sections MUST be present in an Internet-Draft
 containing a module:
@@ -1275,6 +1275,11 @@ can be defined for the desired semantics, then
 one or more pattern statements SHOULD be present.
 A single quoted string SHOULD be used to specify the pattern,
 since a double-quoted string can modify the content.
+If the patterns used in a type definition have known limitations
+such as false positive matches, then these limitations
+SHOULD be documented within the typedef or data definition.
+Simpler patterns SHOULD be used instead of more complex variants,
+if possible, because they are easier to read.
 
 The following typedef from ^RFC6991^ demonstrates the proper
 use of the "pattern" statement:
