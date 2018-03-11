@@ -1276,10 +1276,9 @@ one or more pattern statements SHOULD be present.
 A single quoted string SHOULD be used to specify the pattern,
 since a double-quoted string can modify the content.
 If the patterns used in a type definition have known limitations
-such as false positive matches, then these limitations
-SHOULD be documented within the typedef or data definition.
-Simpler patterns SHOULD be used instead of more complex variants,
-if possible, because they are easier to read.
+such as false negative or false positive matches,
+then these limitations SHOULD be documented within
+the typedef or data definition.
 
 The following typedef from ^RFC6991^ demonstrates the proper
 use of the "pattern" statement:
