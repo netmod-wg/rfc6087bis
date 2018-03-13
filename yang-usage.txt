@@ -998,7 +998,7 @@ SHOULD be present within an import statement.
 
      import ietf-yang-types {
         prefix yang;
-        reference "RFC 6991";
+        reference "RFC 6991: Common YANG Data Types";
      }
 
 If submodules are used, then the document containing the
@@ -1191,7 +1191,7 @@ top-level containers for configuration and non-configuration data.
 For some existing top-level data nodes, configuration data
 was not in scope, so only one container representing operational
 state was created. Refer to the Network Management
-Datastore Architecture (NMDA) ^I-D.ietf-netmod-revised-datastores^.
+Datastore Architecture (NMDA) ^I-D.ietf-netmod-revised-datastores^
 for details.
 
 The number of top-level data nodes within a module
@@ -2441,6 +2441,10 @@ extensive reviews and contributions to this document.
 * Change Log
 
     -- RFC Ed.: remove this section before publication.
+
+** v19 to v20
+
+- fix examples
 
 ** v18 to v19
 
